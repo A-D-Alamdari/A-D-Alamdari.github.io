@@ -602,12 +602,10 @@
     content: "\ef53";
   }
   .bx-users:before {
-    content: "\e901"; /* Replace with the appropriate Unicode character for the people icon */
-    font-family: 'boxicons'; /* Make sure to set the appropriate font-family for Boxicons */
+    content: "\e901"; 
   }
 .bx-newspaper:before {
-  content: "\e905"; /* Replace with the appropriate Unicode character for the newspaper icon */
-  font-family: 'boxicons'; /* Make sure to set the appropriate font-family for Boxicons */
+  content: "\e905"; 
 }
   .bx-shower:before {
     content: "\ef54";
