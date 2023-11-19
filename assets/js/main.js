@@ -214,9 +214,9 @@
   });
 
   /**
-   * Undergraduate Assistants slider
+   * Testimonials slider
    */
-  new Swiper('.Undergraduate Assistants-slider', {
+  new Swiper('.testimonials-slider', {
     speed: 600,
     loop: true,
     autoplay: {
