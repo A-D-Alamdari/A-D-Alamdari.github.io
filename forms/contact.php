@@ -1,21 +1,17 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+// Replace contact@example.com with your real receiving email address
+$receiving_email_address = 'amin.alamdari@ozu.edu.tr';
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'amin.alamdari@ozu.edu.tr';
+// Check if the request is a POST request and if it contains JSON data
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $_SERVER["CONTENT_TYPE"] == "application/json") {
+    // Retrieve JSON data
+    $data = json_decode(file_get_contents("php://input"), true);
 
-// Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $subject = $_POST['subject'];
-    $message = $_POST['message'];
+    $name = $data['name'];
+    $email = $data['email'];
+    $subject = $data['subject'];
+    $message = $data['message'];
 
     // Create email headers
     $headers = "From: $name <$email>" . "\r\n";
@@ -30,11 +26,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Send email
     if (mail($receiving_email_address, $subject, $email_message, $headers)) {
-        echo 'OK'; // Successful submission
+        // Respond with a JSON success message
+        echo json_encode(['success' => true]);
     } else {
-        echo 'Error sending email'; // Failed submission
+        // Respond with a JSON error message
+        echo json_encode(['success' => false, 'message' => 'Error sending email']);
     }
 } else {
-    echo 'Invalid request'; // Not a POST request
+    // Respond with a JSON error message for an invalid request
+    echo json_encode(['success' => false, 'message' => 'Invalid request']);
 }
 ?>
