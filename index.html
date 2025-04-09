@@ -570,6 +570,16 @@
       © 2025 Amin D. Alamdari
     </footer>
 
+
+<script>
+  window.onbeforeunload = function () {
+    // Ensure scroll starts from the top smoothly after short delay
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 10); 
+  };
+</script>
+
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
