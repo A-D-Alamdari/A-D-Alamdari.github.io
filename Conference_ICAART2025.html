@@ -142,24 +142,116 @@
     
 <div style="width: 100%; height: 1px; background: #e0e0e0; margin: 60px 0;"></div>
 
-
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
 <h2>Methodology Overview</h2>
+
 <p>
-  The multitier architecture consists of two primary layers. The first layer employs a centralized planner to compute optimal paths under known constraints. The second layer dynamically adapts the paths based on environmental changes and conflicts using a decentralized consensus mechanism.
+  The methodology presented in the paper <strong>"A Multitier Approach for Dynamic and Partially Observable Multiagent Path-Finding"</strong> involves a two-tiered strategy to solve a Multiagent Path-Finding (MAPF) problem in environments with both static obstacles and partially observable, dynamically moving obstacles:
 </p>
 
+<h3>1. Centralized and Offline Planning</h3>
+<p>
+  Initially, a centralized algorithm (e.g., <em>CBSH2-RTC</em> or <em>EECBS</em>) generates conflict-free paths for agents, considering only static obstacles such as walls and buildings. This phase is executed offline and provides an initial plan for each agent.
+</p>
+
+<h3>2. Decentralized and Online Conflict Resolution</h3>
+<p>
+  Agents independently execute their initial paths. If conflicts arise with partially observable, dynamic obstacles (e.g., humans, vehicles), an online decentralized conflict resolution mechanism is triggered. This mechanism employs:
+</p>
+<ul>
+  <li>
+    A revising strategy using a metaheuristic method — specifically, <strong>Ant Colony Optimization (ACO)</strong> — to dynamically adjust agent paths.
+  </li>
+  <li>
+    A <strong>consensus protocol</strong> (either <em>Fair Token</em> or <em>Probability-Based</em>) that prioritizes agents to ensure fairness and efficient conflict resolution.
+  </li>
+</ul>
+
+<p>
+  This multitier methodology leverages the strengths of centralized approaches (global optimality and planning) and decentralized approaches (scalability and adaptability), enhancing agents' adaptability and fairness in complex, uncertain environments.
+</p>
+
+
+    
 <div style="text-align: center; margin: 30px 0;">
-  <img src="assets/images_ICAART2025/framework.png" alt="MAPF Framework" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-  <p style="font-size: 13px; color: #666;">Figure 1. Illustration of the Simulation Framework</p>
+  <img src="assets/images_ICAART2025/framework.png" alt="MAPF Framework" style="max-width: 80%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <p style="font-size: 18px; color: #666;">Figure 1. Illustration of the Simulation Framework</p>
 </div>
 
+
+<div style="width: 100%; height: 1px; background: #e0e0e0; margin: 30px 0;"></div>
+
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
     
 <h2>Simulation Setup</h2>
 <p>
-  The experiments were conducted on a grid-based environment with 50 agents navigating in a partially observable setting. Dynamic obstacles were introduced with random velocities and non-deterministic patterns. The simulations measured success rate, average path length, and resolution time.
+  The simulation setup described in the paper is designed specifically to evaluate the multitier approach for the Dynamic and Partially Observable Multiagent Path-Finding (DPO-MAPF) problem, as shown in Figure 1. Below is a short description of its key features:
 </p>
 
+<h3>Simulation Framework</h3>
+
+<h4>Environment</h4>
+<p>
+  The simulation operates on grid-based environments represented as graphs, where cells correspond to nodes and agent movement between adjacent cells maps to graph edges.
+</p>
+
+<h4>Map Generation</h4>
+<ul>
+  <li>Various map sizes: <strong>10×10</strong>, <strong>15×15</strong>, <strong>20×20</strong>, and <strong>25×25</strong>.</li>
+  <li>Static obstacles are randomly placed with densities of <strong>5%</strong>, <strong>10%</strong>, <strong>15%</strong>, and <strong>20%</strong>.</li>
+  <li>3 to 12 agents and dynamic obstacles are randomly initialized using unique random seeds for reproducibility.</li>
+  <li>The maximum number of time steps is set to twice the Manhattan distance from the initial to goal position of each agent.</li>
+</ul>
+
+<h4>Dynamic Obstacles</h4>
+<p>
+  These obstacles move unpredictably. Agents can only detect them within a limited local vision — a <strong>5×5</strong> grid centered on the agent.
+</p>
+
+<h4>Agent Actions</h4>
+<p>
+  Each agent can perform the following actions: <strong>Up</strong>, <strong>Down</strong>, <strong>Left</strong>, <strong>Right</strong>, and <strong>Wait</strong>.
+</p>
+
+<h3>Simulation Objective</h3>
+<p>
+  The goal is to guide agents safely from their initial positions to their goal destinations while handling partial observability and avoiding collisions.
+</p>
+<p>
+  Performance is assessed using the following metrics:
+</p>
+<ul>
+  <li><strong>Success Rate</strong></li>
+  <li><strong>Runtime</strong></li>
+  <li><strong>Optimality Gap</strong></li>
+  <li><strong>Concession Difference</strong></li>
+  <li><strong>Earth Mover’s Distance (EMD)</strong></li>
+</ul>
+
+<h3>Implementation</h3>
+<p>
+  The simulation framework is implemented in <strong>Python</strong> and made publicly available on <a href="https://github.com/aniltrue/DPO_MAPF_ICAART_2025" target="_blank">GitHub</a> to support reproducibility and further research.
+</p>
+
+<p>
+  This setup enables extensive experimental evaluation of the proposed multitier strategy, demonstrating its adaptability and effectiveness across a variety of dynamic, partially observable environments.
+</p>
+
+
+  <div style="text-align: center; margin: 30px 0;">
+  <img src="assets/images_ICAART2025/framework.png" alt="MAPF Framework" style="max-width: 80%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <p style="font-size: 18px; color: #666;">Figure 1. Illustration of the Simulation Framework</p>
+</div> 
+
+
+<div style="width: 100%; height: 1px; background: #e0e0e0; margin: 30px 0;"></div>
+
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    
 <h2>Results</h2>
 <div style="text-align: center; margin: 30px 0;">
   <img src="assets/img/publications/results-graph.png" alt="Results Chart" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
@@ -171,12 +263,14 @@
 </p>
 
 
-
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
 <div style="width: 100%; height: 1px; background: #e0e0e0; margin: 60px 0;"></div>
 
     
-
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
     
 <!-- Divider with Title -->
 <div style="text-align: center; margin: 60px 0;">
