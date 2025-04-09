@@ -35,12 +35,12 @@
     }
 
     .authors {
-      margin-bottom: 1em;
+      margin-bottom: 0.6em;
       font-size: 22px;
     }
 
     .affiliation {
-      margin-bottom: 1em;
+      margin-bottom: 0.6em;
       font-size: 20px;
     }
     
@@ -159,7 +159,7 @@
 </div>
 
 <!--   <div class="affiliations" style="font-size: 16px; margin-top: 10px; color: #555;"> -->
-  <div class="container" style="text-align: margin-top: 10px; center;">
+  <div class="container" style="text-align: center;">
     <div class="affiliation">
     <div><sup>1</sup> <a href="https://www.ozyegin.edu.tr/en/computer-science" target="_blank">Department of Computer Science, Özyeğin University</a>, Istanbul, Turkey</div>
     <div><sup>2</sup> <a href="https://www.ozyegin.edu.tr/en/industrial-engineering" target="_blank">Department of Industrial Engineering, Özyeğin University</a>, Istanbul, Turkey</div>
@@ -472,5 +472,11 @@
       © 2025 Amin D. Alamdari
     </footer>
   </div>
+
+<script>
+  window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+  };
+</script>
 </body>
 </html>
