@@ -81,6 +81,33 @@
       color: #aaa;
     }
 
+    .citation-tab {
+  padding: 6px 14px;
+  background-color: #e4e4e4;
+  border: none;
+  cursor: pointer;
+  margin-right: 6px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+.citation-tab.active {
+  background-color: #1d74f5;
+  color: #fff;
+}
+.copy-btn {
+  margin-top: 10px;
+  background-color: #1d74f5;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.copy-btn:hover {
+  background-color: #155bb2;
+}
+
   </style>
 </head>
 <body>
@@ -110,13 +137,12 @@
     
 <div style="text-align: center; margin: 60px 0;">
   <hr style="border: none; height: 1px; background: #ccc; width: 40%; display: inline-block; margin: 0 10px; vertical-align: middle;">
-  <span style="font-size: 13px; color: #999;">Citation Info</span>
+  <span style="font-size: 20px; color: #999;">Citation Info</span>
   <hr style="border: none; height: 1px; background: #ccc; width: 40%; display: inline-block; margin: 0 10px; vertical-align: middle;">
 </div>
 
 <!-- Citation Tabs -->
 <div class="citation-box" style="border: 1px solid #ccc; border-radius: 6px; padding: 15px; background-color: #f9f9f9;">
-  <h3>Paper citation in several formats:</h3>
 
   <!-- Tabs -->
   <div style="margin-bottom: 10px;">
