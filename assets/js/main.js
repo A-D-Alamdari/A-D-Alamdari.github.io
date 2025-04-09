@@ -250,7 +250,7 @@
   /**
    * Citation Tabs: Switch and Copy functionality
    */
-  window.showCitation = function (type) {
+  window.showCitation = function (type, event) {
     document.querySelectorAll('.citation-content').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.citation-tab').forEach(btn => btn.classList.remove('active'));
     const activeTab = document.getElementById(`citation-${type}`);
