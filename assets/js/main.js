@@ -1,22 +1,15 @@
-/**
-* Template Name: iPortfolio
-* Updated: Nov 17 2023 with Bootstrap v5.3.2
-* Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
-(function() {
+(function () {
   "use strict";
 
   /**
    * Easy selector helper function
    */
   const select = (el, all = false) => {
-    el = el.trim()
+    el = el.trim();
     if (all) {
-      return [...document.querySelectorAll(el)]
+      return [...document.querySelectorAll(el)];
     } else {
-      return document.querySelector(el)
+      return document.querySelector(el);
     }
   }
 
@@ -24,115 +17,112 @@
    * Easy event listener function
    */
   const on = (type, el, listener, all = false) => {
-    let selectEl = select(el, all)
+    let selectEl = select(el, all);
     if (selectEl) {
       if (all) {
-        selectEl.forEach(e => e.addEventListener(type, listener))
+        selectEl.forEach(e => e.addEventListener(type, listener));
       } else {
-        selectEl.addEventListener(type, listener)
+        selectEl.addEventListener(type, listener);
       }
     }
   }
 
   /**
-   * Easy on scroll event listener 
+   * Easy on scroll event listener
    */
   const onscroll = (el, listener) => {
-    el.addEventListener('scroll', listener)
+    el.addEventListener('scroll', listener);
   }
 
   /**
    * Navbar links active state on scroll
    */
-  let navbarlinks = select('#navbar .scrollto', true)
+  let navbarlinks = select('#navbar .scrollto', true);
   const navbarlinksActive = () => {
-    let position = window.scrollY + 200
+    let position = window.scrollY + 200;
     navbarlinks.forEach(navbarlink => {
-      if (!navbarlink.hash) return
-      let section = select(navbarlink.hash)
-      if (!section) return
+      if (!navbarlink.hash) return;
+      let section = select(navbarlink.hash);
+      if (!section) return;
       if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
-        navbarlink.classList.add('active')
+        navbarlink.classList.add('active');
       } else {
-        navbarlink.classList.remove('active')
+        navbarlink.classList.remove('active');
       }
-    })
+    });
   }
-  window.addEventListener('load', navbarlinksActive)
-  onscroll(document, navbarlinksActive)
+  window.addEventListener('load', navbarlinksActive);
+  onscroll(document, navbarlinksActive);
 
   /**
    * Scrolls to an element with header offset
    */
   const scrollto = (el) => {
-    let elementPos = select(el).offsetTop
+    let elementPos = select(el).offsetTop;
     window.scrollTo({
       top: elementPos,
       behavior: 'smooth'
-    })
+    });
   }
 
   /**
    * Back to top button
    */
-  let backtotop = select('.back-to-top')
+  let backtotop = select('.back-to-top');
   if (backtotop) {
     const toggleBacktotop = () => {
       if (window.scrollY > 100) {
-        backtotop.classList.add('active')
+        backtotop.classList.add('active');
       } else {
-        backtotop.classList.remove('active')
+        backtotop.classList.remove('active');
       }
     }
-    window.addEventListener('load', toggleBacktotop)
-    onscroll(document, toggleBacktotop)
+    window.addEventListener('load', toggleBacktotop);
+    onscroll(document, toggleBacktotop);
   }
 
   /**
    * Mobile nav toggle
    */
-  on('click', '.mobile-nav-toggle', function(e) {
-    select('body').classList.toggle('mobile-nav-active')
-    this.classList.toggle('bi-list')
-    this.classList.toggle('bi-x')
-  })
+  on('click', '.mobile-nav-toggle', function (e) {
+    select('body').classList.toggle('mobile-nav-active');
+    this.classList.toggle('bi-list');
+    this.classList.toggle('bi-x');
+  });
 
   /**
-   * Scrool with ofset on links with a class name .scrollto
+   * Scroll with offset on .scrollto links
    */
-  on('click', '.scrollto', function(e) {
+  on('click', '.scrollto', function (e) {
     if (select(this.hash)) {
-      e.preventDefault()
-
-      let body = select('body')
+      e.preventDefault();
+      let body = select('body');
       if (body.classList.contains('mobile-nav-active')) {
-        body.classList.remove('mobile-nav-active')
-        let navbarToggle = select('.mobile-nav-toggle')
-        navbarToggle.classList.toggle('bi-list')
-        navbarToggle.classList.toggle('bi-x')
+        body.classList.remove('mobile-nav-active');
+        let navbarToggle = select('.mobile-nav-toggle');
+        navbarToggle.classList.toggle('bi-list');
+        navbarToggle.classList.toggle('bi-x');
       }
-      scrollto(this.hash)
+      scrollto(this.hash);
     }
-  }, true)
+  }, true);
 
   /**
-   * Scroll with ofset on page load with hash links in the url
+   * Scroll on page load with hash links
    */
   window.addEventListener('load', () => {
-    if (window.location.hash) {
-      if (select(window.location.hash)) {
-        scrollto(window.location.hash)
-      }
+    if (window.location.hash && select(window.location.hash)) {
+      scrollto(window.location.hash);
     }
   });
 
   /**
    * Hero type effect
    */
-  const typed = select('.typed')
+  const typed = select('.typed');
   if (typed) {
-    let typed_strings = typed.getAttribute('data-typed-items')
-    typed_strings = typed_strings.split(',')
+    let typed_strings = typed.getAttribute('data-typed-items');
+    typed_strings = typed_strings.split(',');
     new Typed('.typed', {
       strings: typed_strings,
       loop: true,
@@ -150,17 +140,17 @@
     new Waypoint({
       element: skilsContent,
       offset: '80%',
-      handler: function(direction) {
+      handler: function (direction) {
         let progress = select('.progress .progress-bar', true);
         progress.forEach((el) => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%'
+          el.style.width = el.getAttribute('aria-valuenow') + '%';
         });
       }
-    })
+    });
   }
 
   /**
-   * Porfolio isotope and filter
+   * Portfolio isotope and filter
    */
   window.addEventListener('load', () => {
     let portfolioContainer = select('.portfolio-container');
@@ -171,9 +161,9 @@
 
       let portfolioFilters = select('#portfolio-flters li', true);
 
-      on('click', '#portfolio-flters li', function(e) {
+      on('click', '#portfolio-flters li', function (e) {
         e.preventDefault();
-        portfolioFilters.forEach(function(el) {
+        portfolioFilters.forEach(function (el) {
           el.classList.remove('filter-active');
         });
         this.classList.add('filter-active');
@@ -181,16 +171,15 @@
         portfolioIsotope.arrange({
           filter: this.getAttribute('data-filter')
         });
-        portfolioIsotope.on('arrangeComplete', function() {
-          AOS.refresh()
+        portfolioIsotope.on('arrangeComplete', function () {
+          AOS.refresh();
         });
       }, true);
     }
-
   });
 
   /**
-   * Initiate portfolio lightbox 
+   * Initiate portfolio lightbox
    */
   const portfolioLightbox = GLightbox({
     selector: '.portfolio-lightbox'
@@ -234,7 +223,6 @@
         slidesPerView: 1,
         spaceBetween: 20
       },
-
       1200: {
         slidesPerView: 3,
         spaceBetween: 20
@@ -251,37 +239,56 @@
       easing: 'ease-in-out',
       once: true,
       mirror: false
-    })
+    });
   });
 
   /**
-   * Initiate Pure Counter 
+   * Initiate Pure Counter
    */
   new PureCounter();
 
-})()
-
-
-<script>
-function showCitation(type) {
-  document.querySelectorAll('.citation-content').forEach(el => el.style.display = 'none');
-  document.querySelectorAll('.citation-tab').forEach(btn => btn.classList.remove('active'));
-  document.getElementById(`citation-${type}`).style.display = 'block';
-  event.target.classList.add('active');
-}
-
-function copyCitation(elementId) {
-  const el = document.getElementById(elementId);
-  if (el.tagName === 'PRE') {
-    const text = el.textContent;
-    navigator.clipboard.writeText(text);
-  } else {
-    el.style.display = 'block'; // make textarea visible to copy
-    el.select();
-    document.execCommand('copy');
-    el.style.display = 'none';
+  /**
+   * Citation Tabs: Switch and Copy functionality
+   */
+  window.showCitation = function (type) {
+    document.querySelectorAll('.citation-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.citation-tab').forEach(btn => btn.classList.remove('active'));
+    const activeTab = document.getElementById(`citation-${type}`);
+    if (activeTab) activeTab.style.display = 'block';
+    event.target.classList.add('active');
   }
-  alert("Citation copied to clipboard!");
-}
-</script>
 
+  window.copyCitation = function (elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    let text = "";
+    if (el.tagName === 'PRE') {
+      text = el.textContent;
+    } else {
+      el.style.display = 'block';
+      el.select();
+      text = el.value;
+      el.style.display = 'none';
+    }
+    navigator.clipboard.writeText(text)
+      .then(() => alert("Citation copied to clipboard!"))
+      .catch(err => alert("Failed to copy citation."));
+  }
+
+  /**
+   * Auto-switch citation tab if #bibtex or #harvard in URL
+   */
+  window.addEventListener("load", () => {
+    const hash = window.location.hash.toLowerCase().replace('#', '');
+    const validTabs = ['harvard', 'bibtex', 'endnote'];
+    if (validTabs.includes(hash)) {
+      showCitation(hash);
+      const tabButton = document.querySelector(`.citation-tab[onclick*="${hash}"]`);
+      if (tabButton) {
+        document.querySelectorAll('.citation-tab').forEach(btn => btn.classList.remove('active'));
+        tabButton.classList.add('active');
+      }
+    }
+  });
+
+})();
