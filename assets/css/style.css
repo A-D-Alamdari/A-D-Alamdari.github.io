@@ -1071,6 +1071,36 @@ section {
   }
 }
 
+
+
+
+
+<style>
+.section-divider {
+  text-align: center;
+  margin: 60px auto;
+  color: #888;
+}
+
+.section-divider hr {
+  border: none;
+  height: 1px;
+  background: #ccc;
+  width: 40%;
+  display: inline-block;
+  margin: 0 10px;
+  vertical-align: middle;
+}
+
+.section-divider span {
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #aaa;
+}
+</style>
+
+
 /*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/
