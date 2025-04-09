@@ -250,30 +250,25 @@
   /**
    * Citation Tabs: Switch and Copy functionality
    */
-  window.showCitation = function (type, event) {
-    document.querySelectorAll('.citation-content').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('.citation-tab').forEach(btn => btn.classList.remove('active'));
-    const activeTab = document.getElementById(`citation-${type}`);
-    if (activeTab) activeTab.style.display = 'block';
-    event.target.classList.add('active');
-  }
+function showCitation(type, event) {
+  document.querySelectorAll('.citation-content').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.citation-tab').forEach(btn => btn.classList.remove('active'));
 
-  window.copyCitation = function (elementId) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    let text = "";
-    if (el.tagName === 'PRE') {
-      text = el.textContent;
-    } else {
-      el.style.display = 'block';
-      el.select();
-      text = el.value;
-      el.style.display = 'none';
-    }
-    navigator.clipboard.writeText(text)
-      .then(() => alert("Citation copied to clipboard!"))
-      .catch(err => alert("Failed to copy citation."));
-  }
+  const tab = document.getElementById(`citation-${type}`);
+  if (tab) tab.style.display = 'block';
+  if (event && event.target) event.target.classList.add('active');
+}
+
+function copyCitation(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+
+  let text = el.tagName === 'PRE' ? el.textContent : el.value;
+
+  navigator.clipboard.writeText(text)
+    .then(() => alert("Citation copied to clipboard!"))
+    .catch(() => alert("Failed to copy citation."));
+}
 
   /**
    * Auto-switch citation tab if #bibtex or #harvard in URL
