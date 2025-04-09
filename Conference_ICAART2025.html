@@ -475,8 +475,14 @@
 
 <script>
   window.onbeforeunload = function () {
-    window.scrollTo(0, 0);
+    // Ensure scroll starts from the top smoothly after short delay
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 10); 
   };
 </script>
+  
+
+  
 </body>
 </html>
