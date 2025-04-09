@@ -148,16 +148,16 @@
     
 
     
+<!-- Divider with Title -->
 <div style="text-align: center; margin: 60px 0;">
   <hr style="border: none; height: 1px; background: #ccc; width: 40%; display: inline-block; margin: 0 10px; vertical-align: middle;">
   <span style="font-size: 20px; color: #999;">Citation Info</span>
   <hr style="border: none; height: 1px; background: #ccc; width: 40%; display: inline-block; margin: 0 10px; vertical-align: middle;">
 </div>
 
-<!-- Citation Tabs -->
-
-    <div class="citation-box" style="border: 1px solid #ccc; border-radius: 6px; padding: 15px; background-color: #f9f9f9;">
-
+<!-- Citation Box -->
+<div class="citation-box" style="border: 1px solid #ccc; border-radius: 6px; padding: 15px; background-color: #f9f9f9;">
+  
   <!-- Tabs -->
   <div style="margin-bottom: 10px;">
     <button onclick="showCitation('harvard', event)" class="citation-tab active">Harvard</button>
@@ -166,27 +166,35 @@
 
   <!-- Harvard Citation -->
   <div id="citation-harvard" class="citation-content">
-    <p><strong>Doğru, A., Alamdari, A. D., Balpınarlı, D. and Aydoğan, R.</strong> (2025). <em>A Multitier Approach for Dynamic and Partially Observable Multiagent Path-Finding.</em> In <em>Proceedings of the 17th International Conference on Agents and Artificial Intelligence – Volume 3: ICAART</em>; ISBN 978-989-758-737-5; ISSN 2184-433X, SciTePress, pages 562–573. DOI: <a href="https://doi.org/10.5220/0013159800003890" target="_blank">10.5220/0013159800003890</a></p>
+    <p>
+      <strong>Doğru, A., Alamdari, A. D., Balpınarlı, D. and Aydoğan, R.</strong> (2025).
+      <em>A Multitier Approach for Dynamic and Partially Observable Multiagent Path-Finding.</em><br>
+      In <em>Proceedings of the 17th International Conference on Agents and Artificial Intelligence – Volume 3: ICAART</em>;
+      ISBN 978-989-758-737-5; ISSN 2184-433X, SciTePress, pages 562–573.
+      DOI: <a href="https://doi.org/10.5220/0013159800003890" target="_blank">10.5220/0013159800003890</a>
+    </p>
     <button onclick="copyCitation('harvard-text')" class="copy-btn">Copy</button>
     <textarea id="harvard-text" style="display:none;">Doğru, A., Alamdari, A. D., Balpınarlı, D. and Aydoğan, R. (2025). A Multitier Approach for Dynamic and Partially Observable Multiagent Path-Finding. In Proceedings of the 17th International Conference on Agents and Artificial Intelligence – Volume 3: ICAART; ISBN 978-989-758-737-5; ISSN 2184-433X, SciTePress, pages 562–573. DOI: 10.5220/0013159800003890</textarea>
   </div>
 
-  <!-- BibTeX citation -->
+  <!-- BibTeX Citation -->
   <div id="citation-bibtex" class="citation-content" style="display:none;">
-    <    <pre id="bibtex-text">@conference{dogru2025multitier,
+    <pre id="bibtex-text">@conference{dogru2025multitier,
   author={Anıl Doğru and Amin Deldari Alamdari and Duru Balpınarlı and Reyhan Aydoğan},
-    title={A Multitier Approach for Dynamic and Partially Observable Multiagent Path-Finding},
-    booktitle={Proceedings of the 17th International Conference on Agents and Artificial Intelligence – Volume 3: ICAART},
-    year={2025},
-    pages={562–573},
-    publisher={SciTePress},
-    organization={INSTICC},
-    doi={10.5220/0013159800003890},
-    isbn={978-989-758-737-5},
-    issn={2184-433X}}</pre>
+  title={A Multitier Approach for Dynamic and Partially Observable Multiagent Path-Finding},
+  booktitle={Proceedings of the 17th International Conference on Agents and Artificial Intelligence – Volume 3: ICAART},
+  year={2025},
+  pages={562–573},
+  publisher={SciTePress},
+  organization={INSTICC},
+  doi={10.5220/0013159800003890},
+  isbn={978-989-758-737-5},
+  issn={2184-433X}
+}</pre>
     <button onclick="copyCitation('bibtex-text')" class="copy-btn">Copy</button>
   </div>
 </div>
+
 
 
 
