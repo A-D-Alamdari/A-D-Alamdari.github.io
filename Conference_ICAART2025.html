@@ -176,27 +176,27 @@
 
     
 <div style="text-align: center; margin: 30px 0;">
-  <img src="assets/images_ICAART2025/mutltitier_approach.png" alt="MAPF Framework" style="max-width: 60%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <img src="assets/images_ICAART2025/mutltitier_approach.png" alt="Proposed Multitier Approach" style="max-width: 60%; border-radius: 1px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
   <p style="font-size: 18px; color: #666;">Figure 1. Illustration of the Proposed Multitier Approach</p>
 </div>
 
 <div style="text-align: center; margin: 30px 0;">
-  <img src="assets/images_ICAART2025/fair_token_protocol.png" alt="MAPF Framework" style="max-width: 60%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-  <p style="font-size: 18px; color: #666;">Figure 1. Fair Token Protocol</p>
+  <img src="assets/images_ICAART2025/fair_token_protocol.png" alt="Fair Token Protocol" style="max-width: 60%; border-radius: 1px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <p style="font-size: 18px; color: #666;">Figure 2. Fair Token Protocol</p>
 </div>
 
 <div style="text-align: center; margin: 30px 0;">
-  <img src="assets/images_ICAART2025/aco_revising.png" alt="MAPF Framework" style="max-width: 60%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <img src="assets/images_ICAART2025/aco_revising.png" alt="Proposed ACO for Revising Strategy" style="max-width: 60%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
   <p style="font-size: 18px; color: #666;">Algorithm 1. Proposed ACO for Revising Strategy</p>
 </div>
 
 <div style="text-align: center; margin: 30px 0;">
-  <img src="assets/images_ICAART2025/eq15.png" alt="MAPF Framework" style="max-width: 60%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <img src="assets/images_ICAART2025/eq15.png" alt="Equation 15" style="max-width: 45%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
   <p style="font-size: 18px; color: #666;">Equation 15</p>
 </div>
 
 <div style="text-align: center; margin: 30px 0;">
-  <img src="assets/images_ICAART2025/eq16.png" alt="MAPF Framework" style="max-width: 60%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <img src="assets/images_ICAART2025/eq16.png" alt="Equation 16 and 17" style="max-width: 45%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
   <p style="font-size: 18px; color: #666;">Equation 16 and 17</p>
 </div>
 
@@ -262,7 +262,7 @@
 
   <div style="text-align: center; margin: 30px 0;">
   <img src="assets/images_ICAART2025/framework.png" alt="MAPF Framework" style="max-width: 60%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-  <p style="font-size: 18px; color: #666;">Figure 1. Illustration of the Simulation Framework</p>
+  <p style="font-size: 18px; color: #666;">Figure 3. Illustration of the Simulation Framework</p>
 </div> 
 
 
@@ -272,16 +272,94 @@
 <!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
     
 <h2>Results</h2>
-<div style="text-align: center; margin: 30px 0;">
-  <img src="assets/img/publications/results-graph.png" alt="Results Chart" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-  <p style="font-size: 13px; color: #666;">Figure 2. Success rate comparison between baseline and proposed method</p>
-</div>
+
+<h3>Multitier Components</h3>
+<ul>
+  <li><strong>Success Rate:</strong> Optimal solver (<em>CBSH2-RTC</em>) with <em>Probability-Based</em> protocol achieves the highest success rate (46.5%).</li>
+  <li>No statistically significant difference observed between optimal and suboptimal solvers regarding success rate.</li>
+</ul>
+
+<ul>
+  <li><strong>Optimality Gap:</strong> No statistically significant differences between solver and protocol configurations. Gap remains approximately <strong>4.2%–4.5%</strong>.</li>
+</ul>
+
+<ul>
+  <li><strong>Runtime:</strong> <em>Fair Token</em> protocol with suboptimal solver (<em>EECBS</em>) has longer runtimes due to evaluation of hypothetical conflicts for all agents.</li>
+</ul>
+
+<ul>
+  <li><strong>Fairness (Concession Difference):</strong> Fair Token protocol achieves the best fairness (<strong>0.42–0.43</strong> max concession diff), while Probability-Based protocol shows the poorest fairness (<strong>0.71–0.80</strong>).</li>
+</ul>
+
+<h3>Revising Strategy Evaluation</h3>
+<ul>
+  <li><strong>Success Rate:</strong> Enhanced ACO outperforms all other methods:
+    <ul style="list-style-type: circle; padding-left: 1.2em;">
+      <li>Enhanced ACO (44.7%)</li>
+      <li>Basic ACO (39.9%)</li>
+      <li>Only Waiting (23.5%)</li>
+      <li>No Revising (18.9%)</li>
+    </ul>
+  </li>
+
+  <li><strong>Optimality Gap:</strong> Slight increase with Enhanced ACO (~4.47%) is justified by significant gains in success rate.</li>
+
+  <li><strong>Runtime:</strong> Basic ACO is the slowest (~1.92 sec). Enhanced ACO reduces runtime via early stopping and integration of a "wait" strategy.</li>
+
+  <li><strong>Path Revision Impact (EMD):</strong> Enhanced ACO leads to more significant path changes (higher EMD), which strongly correlates with improved success rates.</li>
+</ul>
+
+<h3>Key Takeaways</h3>
+<ul>
+  <li>The multitier framework balances <strong>centralized offline planning</strong> and <strong>decentralized online resolution</strong> effectively.</li>
+  <li><strong>Enhanced ACO</strong> substantially improves adaptability and agent performance in uncertain environments.</li>
+  <li><strong>Fair Token</strong> protocol excels in ensuring fairness among agents during conflict resolution.</li>
+  <li>The results validate the proposed methodology's effectiveness in real-world-like, dynamic, partially observable MAPF scenarios.</li>
+</ul>
+
+    
+<h3 style="text-align: center; color: #d9534f;">
+  📄 For more details please visit and read the 
+  <strong>
+    <a href="https://www.scitepress.org/PublicationsDetail.aspx?ID=voQiJBX0Vmk=&t=1" target="_blank" style="color: #d9534f; text-decoration: underline;">
+      Paper
+    </a>
+  </strong>
+</h3>
+
+
+    
+<div style="width: 100%; height: 1px; background: #e0e0e0; margin: 30px 0;"></div>
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+<h2>Summary and Conclusion</h2>
 
 <p>
-  Our approach demonstrated superior adaptability and fairness in multiagent conflict resolution. The success rate improved by 21% compared to baseline heuristics. Additionally, path revisions were reduced by over 30% due to the metaheuristic-guided coordination strategy.
+  This paper introduces the <strong>Dynamic and Partially Observable Multiagent Path-Finding (DPO-MAPF)</strong> problem, an extension of traditional MAPF that incorporates <em>dynamic</em> and <em>partially observable obstacles</em>.
 </p>
 
+<p>
+  To address this challenge, a <strong>multitier methodology</strong> is proposed, combining:
+</p>
 
+<ul>
+  <li><strong>Centralized offline planning</strong> for navigating around static obstacles using optimal or suboptimal solvers.</li>
+  <li><strong>Decentralized online conflict resolution</strong> utilizing <em>Ant Colony Optimization (ACO)</em> enhanced with consensus protocols to manage dynamic obstacles.</li>
+</ul>
+
+<p>Experimental results demonstrate that:</p>
+
+<ul>
+  <li>The multitier strategy significantly <strong>improves agent adaptability</strong> and <strong>success rates</strong> in uncertain environments.</li>
+  <li>The <strong>Fair Token protocol</strong> effectively maintains <strong>fairness</strong> among agents during real-time conflict resolution.</li>
+  <li><strong>Enhanced ACO</strong> outperforms basic revising strategies in both success rate and runtime, with only a minor trade-off in optimality gap.</li>
+</ul>
+
+<p>
+  In conclusion, this multitier approach offers a robust, fair, and efficient framework for solving complex MAPF problems in dynamic, partially observable environments — providing a solid foundation for future research in decentralized multi-agent coordination and planning under uncertainty.
+</p>
+    
 <!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 <!--     --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
