@@ -260,3 +260,28 @@
   new PureCounter();
 
 })()
+
+
+<script>
+function showCitation(type) {
+  document.querySelectorAll('.citation-content').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.citation-tab').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`citation-${type}`).style.display = 'block';
+  event.target.classList.add('active');
+}
+
+function copyCitation(elementId) {
+  const el = document.getElementById(elementId);
+  if (el.tagName === 'PRE') {
+    const text = el.textContent;
+    navigator.clipboard.writeText(text);
+  } else {
+    el.style.display = 'block'; // make textarea visible to copy
+    el.select();
+    document.execCommand('copy');
+    el.style.display = 'none';
+  }
+  alert("Citation copied to clipboard!");
+}
+</script>
+
