@@ -572,13 +572,19 @@
 
 
 <script>
-  window.onbeforeunload = function () {
-    // Ensure scroll starts from the top smoothly after short delay
+  // Disable browser's default scroll restoration
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+
+  // Scroll to top on load (after a short delay)
+  window.addEventListener('load', function () {
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 10); 
-  };
+    }, 50);
+  });
 </script>
+
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
