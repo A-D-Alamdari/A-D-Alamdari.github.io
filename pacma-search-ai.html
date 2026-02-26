@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,10 +16,10 @@
       --primary-dark: #1556b8;
       --border: #dbe2f1;
       --ok: #0b7a39;
+      --warn: #7a4e0b;
+      --warn-bg: #fff8ed;
     }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -26,13 +27,11 @@
       background: var(--bg);
       color: var(--text);
     }
-
     .container {
       max-width: 1080px;
       margin: 36px auto;
       padding: 0 18px;
     }
-
     .hero,
     .section {
       background: var(--card);
@@ -42,21 +41,27 @@
       margin-bottom: 18px;
       box-shadow: 0 2px 8px rgba(12, 36, 74, 0.04);
     }
+    
+    /* NEW CSS ADDED HERE FOR THE PAC-MAN IMAGE */
+    .hero-img {
+      display: block;
+      margin: 0 auto 20px auto; /* Centers the image and adds 20px space below it */
+      max-width: 850px; /* Adjust this to make Pac-Man bigger or smaller */
+      height: auto;
+    }
+    /* ---------------------------------------- */
 
     h1, h2, h3 {
       margin-top: 0;
       line-height: 1.25;
     }
-
     h1 { font-size: 2rem; margin-bottom: 8px; }
     h2 { font-size: 1.4rem; margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
     h3 { font-size: 1.05rem; margin-bottom: 6px; }
-
     .meta {
       color: var(--muted);
       margin-bottom: 14px;
     }
-
     .btn {
       display: inline-block;
       text-decoration: none;
@@ -68,24 +73,30 @@
       font-weight: 600;
       font-size: 0.92rem;
     }
-
     .btn:hover { background: var(--primary-dark); }
-
     ul { margin-top: 8px; }
-
     .grid {
       display: grid;
       gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     }
-
     .q-card {
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 14px;
+      padding: 16px;
       background: #fbfcff;
     }
-
+    .q-card ul {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .q-card .dep {
+      font-size: 0.8rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
     .badge {
       display: inline-block;
       background: #e8f1ff;
@@ -97,7 +108,6 @@
       margin-bottom: 8px;
       font-weight: 600;
     }
-
     pre {
       margin: 8px 0 0;
       padding: 10px;
@@ -107,27 +117,41 @@
       border-radius: 6px;
       font-size: 0.88rem;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 8px;
     }
-
     th, td {
       border: 1px solid var(--border);
       padding: 8px;
       text-align: left;
       font-size: 0.93rem;
     }
-
     th { background: #f0f5ff; }
-
     .note {
       color: var(--ok);
       font-weight: 600;
     }
-
+    .callout {
+      background: var(--warn-bg);
+      border-left: 4px solid #e8970b;
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin: 12px 0;
+      color: var(--warn);
+      font-size: 0.93rem;
+    }
+    .callout code { color: var(--warn); }
+    .algo-table th, .algo-table td { text-align: center; }
+    .algo-table td:first-child { text-align: left; font-weight: 600; }
+    details { margin: 10px 0; }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.95rem;
+    }
     footer {
       text-align: center;
       color: var(--muted);
@@ -138,113 +162,488 @@
 </head>
 <body>
   <main class="container">
+      
+      
+          <!-- ── HERO ── -->
     <section class="hero">
-      <h1>Project 1: Search (Pac-Man AI Homework)</h1>
-      <p class="meta">
-        Adapted homework page based on UC Berkeley CS188 Project 1 guidance and tailored for this repository.
-      </p>
-      <p>
-        In this homework, you will implement classic AI search algorithms (DFS, BFS, UCS, and A*) and apply them to Pac-Man pathfinding tasks.
-        You will also design problem formulations and heuristics for corners and food-collection challenges.
-      </p>
-      <a class="btn" href="https://inst.eecs.berkeley.edu/~cs188/su25/projects/proj1/" target="_blank" rel="noopener noreferrer">Berkeley Project 1 Page</a>
-      <a class="btn" href="README.md">Repository README</a>
+      <div class="hero-inner">
+          <h1>Assignment 1: Search (Pac-Man AI Homework)</h1>
+          <p class="meta">
+            CS451/551 · Adapted from UC Berkeley CS 188 Project 1 ·
+            Modified by Amin D. Alamdari, 2026
+          </p>
+          <h1> </h1>
+          
+          <img
+          class="hero-img"
+          src="https://raw.githubusercontent.com/A-D-Alamdari/CS451-551-Homework1/master/assets/pac-man.png"
+          alt="Pac-Man"
+        />
+        
+        <div class="hero-text">
+
+          <p>
+            In this project your Pac-Man agent will find paths through his maze world — both to
+            reach a particular location and to collect food efficiently. You will build general
+            search algorithms and apply them to different Pac-Man scenarios.
+          </p>
+          <p>
+            The game engine, display system, and test infrastructure are already built for you.
+            <strong>Your job is to implement the search algorithms and problem formulations that
+            make Pac-Man smart.</strong>
+          </p>
+          <a class="btn" href="" target="_blank" rel="noopener noreferrer">CS 451/551 Course Link (TBA)</a>
+          <a class="btn" href="https://inst.eecs.berkeley.edu/~cs188/su25/projects/proj1/" target="_blank" rel="noopener noreferrer">Berkeley Project 1 Page</a>
+          <a class="btn" href="https://github.com/A-D-Alamdari/CS451-551-Homework1/tree/master">Homework's Github Repository</a>
+          <a class="btn" href="https://github.com/A-D-Alamdari/CS451-551-Homework1/blob/master/README.md">Repository README</a>
+        </div>
+        
+      </div>
+      
     </section>
 
+
+    <!-- ── COMPATIBILITY & PREREQUISITES ── -->
+    <section class="section">
+      <h2>Compatibility &amp; Prerequisites</h2>
+      <p>This project has been tested and works on <strong>Linux, macOS, and Windows</strong>.</p>
+      <ul>
+        <li><strong>Python 3.10+</strong> — no external packages required (only the standard library)</li>
+        <li><strong>Tkinter</strong> — usually bundled with Python; needed for the graphical display</li>
+        <li><strong>pytest</strong> — for running the self-check tests</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Linux users:</strong> Tkinter is not bundled with Python on most Linux distributions.
+        Install it before launching the game:
+        <pre style="border-left-color:#e8970b; background:#fff3dc;">sudo apt-get install python3-tk        # Debian / Ubuntu
+sudo dnf install python3-tkinter       # Fedora / RHEL
+sudo pacman -S tk                      # Arch</pre>
+        The <code>pytest</code> tests run fully headless and work <strong>without</strong> Tkinter.
+      </div>
+
+      <h3>Verify your setup</h3>
+      <pre>python main.py</pre>
+      <p>You should see a Pac-Man game window open. Use the arrow keys to play manually and confirm everything works.</p>
+
+      <h3>Install pytest (if needed)</h3>
+      <pre>pip install pytest</pre>
+    </section>
+
+    <!-- ── LEARNING OBJECTIVES ── -->
     <section class="section">
       <h2>Learning Objectives</h2>
       <ul>
         <li>Implement reusable graph-search algorithms over a generic <code>SearchProblem</code> API.</li>
-        <li>Understand frontier strategies: stack, queue, and priority queue.</li>
+        <li>Understand frontier strategies: stack (DFS), queue (BFS), and priority queue (UCS / A*).</li>
         <li>Design admissible and consistent heuristics for A*.</li>
         <li>Model richer state spaces (e.g., visited corners, food grid).</li>
       </ul>
     </section>
 
+    <!-- ── PROJECT STRUCTURE ── -->
     <section class="section">
-      <h2>Setup & Quick Start</h2>
-      <h3>Prerequisites</h3>
-      <ul>
-        <li>Python 3.10+</li>
-        <li>Tkinter (optional for GUI; headless tests work without it)</li>
-      </ul>
-      <h3>Run the game</h3>
-      <pre>python main.py</pre>
-      <h3>Try a search agent</h3>
-      <pre>python main.py -l tinyMaze -p SearchAgent -a fn=depth_first_search</pre>
-      <p class="note">You should only edit: <code>pacman/search.py</code> and <code>pacman/search_agents.py</code>.</p>
+      <h2>Project Structure</h2>
+      <details open>
+        <summary>Show / hide directory tree</summary>
+        <pre>pac-man-search/
+├── main.py                        # Entry point — run this to start Pac-Man
+│
+├── pacman/                        # Main game package
+│   ├── search.py                  # ✏  search algorithms   (YOU EDIT THIS)
+│   ├── search_agents.py           # ✏  search problems &amp; heuristics (YOU EDIT THIS)
+│   ├── engine.py                  # Game runner and command-line interface
+│   ├── game.py                    # Core types: GameState, Agent, Directions, Grid
+│   ├── layout.py                  # Maze loading and parsing from .lay files
+│   ├── util.py                    # Data structures: Stack, Queue, PriorityQueue
+│   ├── eight_puzzle.py            # 8-puzzle domain (tests generic search)
+│   ├── agents/
+│   │   ├── pacman_agents.py       # Pre-built Pac-Man agents
+│   │   ├── ghost_agents.py        # Ghost behaviour controllers
+│   │   └── keyboard_agents.py    # Human-playable keyboard agent
+│   └── display/
+│       ├── graphics_display.py    # Tkinter graphical display
+│       ├── graphics_utils.py      # Graphics helper utilities
+│       └── text_display.py        # Text-only display (no GUI needed)
+│
+├── layouts/                       # 37 maze layout files (.lay)
+│
+└── tests/
+    └── check.py                   # 45 self-check tests — run with pytest</pre>
+      </details>
+
+      <h3>Files you will edit</h3>
+      <p class="note">You only need to modify two files. All places are marked with <code># TODO</code> comments. Do not modify any other files.</p>
+      <table>
+        <thead><tr><th>File</th><th>What You Implement</th></tr></thead>
+        <tbody>
+          <tr><td><code>pacman/search.py</code></td><td>Generic search algorithms (DFS, BFS, UCS, A*)</td></tr>
+          <tr><td><code>pacman/search_agents.py</code></td><td>Search problem definitions and heuristic functions</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:16px;">Exact functions &amp; methods to implement</h3>
+      <p><strong><code>pacman/search.py</code> — 4 functions</strong></p>
+      <table>
+        <thead><tr><th>Function</th><th>Q</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>depth_first_search(problem)</code></td><td>Q1</td><td>DFS graph search — use <code>util.Stack</code></td></tr>
+          <tr><td><code>breadth_first_search(problem)</code></td><td>Q2</td><td>BFS graph search — use <code>util.Queue</code></td></tr>
+          <tr><td><code>uniform_cost_search(problem)</code></td><td>Q3</td><td>UCS graph search — use <code>util.PriorityQueue</code>, priority = cumulative cost</td></tr>
+          <tr><td><code>a_star_search(problem, heuristic)</code></td><td>Q4</td><td>A* graph search — priority = g(n) + h(n)</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top:14px;"><strong><code>pacman/search_agents.py</code> — 7 methods and functions</strong></p>
+      <table>
+        <thead><tr><th>Class / Function</th><th>Method</th><th>Q</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>CornersProblem</code></td><td><code>get_start_state()</code></td><td>Q5</td><td>Hashable state encoding Pac-Man's position + visited corners</td></tr>
+          <tr><td><code>CornersProblem</code></td><td><code>is_goal_state(state)</code></td><td>Q5</td><td>Return <code>True</code> when all four corners have been visited</td></tr>
+          <tr><td><code>CornersProblem</code></td><td><code>get_successors(state)</code></td><td>Q5</td><td>Return <code>(successor, action, 1)</code> triples with updated corner info</td></tr>
+          <tr><td><code>corners_heuristic(state, problem)</code></td><td><em>free function</em></td><td>Q6</td><td>Admissible &amp; consistent heuristic for <code>CornersProblem</code></td></tr>
+          <tr><td><code>food_heuristic(state, problem)</code></td><td><em>free function</em></td><td>Q7</td><td>Admissible &amp; consistent heuristic for <code>FoodSearchProblem</code></td></tr>
+          <tr><td><code>AnyFoodSearchProblem</code></td><td><code>is_goal_state(state)</code></td><td>Q8</td><td>Return <code>True</code> if position <code>(x, y)</code> contains food</td></tr>
+          <tr><td><code>ClosestDotSearchAgent</code></td><td><code>find_path_to_closest_dot(game_state)</code></td><td>Q8</td><td>Use a search function on <code>AnyFoodSearchProblem</code> to return path to nearest dot</td></tr>
+        </tbody>
+      </table>
     </section>
 
+    <!-- ── GETTING STARTED ── -->
+    <section class="section">
+      <h2>Getting Started</h2>
+
+      <h3>Step 1 — Play the game manually</h3>
+      <pre>python main.py</pre>
+      <p>Use the arrow keys to control Pac-Man. This helps you understand the game mechanics.</p>
+
+      <h3>Step 2 — Try different layouts</h3>
+      <pre>python main.py --layout smallMaze
+python main.py --layout mediumMaze
+python main.py -l bigMaze</pre>
+
+      <h3>Step 3 — Understand <code>SearchProblem</code></h3>
+      <p>Every search problem implements the abstract class defined in <code>search.py</code>:</p>
+      <pre>class SearchProblem:
+    def get_start_state(self):      # Returns the start state
+    def is_goal_state(self, state): # Returns True if state is a goal
+    def get_successors(self, state):# Returns list of (state, action, step_cost)
+    def get_cost_of_actions(self, actions): # Total cost of action sequence</pre>
+
+      <h3>Step 4 — Understand the provided data structures (<code>pacman/util.py</code>)</h3>
+      <pre>stack = util.Stack()          # LIFO — use for DFS
+queue = util.Queue()          # FIFO — use for BFS
+pq    = util.PriorityQueue()  # Min-heap — use for UCS and A*
+
+pq.push(item, priority)
+pq.update(item, priority)     # Update priority if lower
+
+# All three support:
+data_structure.is_empty()</pre>
+    </section>
+
+    <!-- ── HOMEWORK TASKS ── -->
     <section class="section">
       <h2>Homework Tasks (Q1–Q8)</h2>
       <div class="grid">
+
         <article class="q-card">
           <span class="badge">Q1 — 9 pts</span>
           <h3>Depth-First Search</h3>
           <p>Implement <code>depth_first_search</code> with graph search in <code>pacman/search.py</code>.</p>
+          <ul>
+            <li>Use <code>util.Stack</code> as frontier</li>
+            <li>Track visited states to avoid cycles</li>
+            <li>Return a list of actions</li>
+          </ul>
+          <pre>python main.py -l tinyMaze -p SearchAgent
+python main.py -l mediumMaze -p SearchAgent
+python main.py -l bigMaze -z .5 -p SearchAgent</pre>
         </article>
+
         <article class="q-card">
           <span class="badge">Q2 — 9 pts</span>
           <h3>Breadth-First Search</h3>
-          <p>Implement <code>breadth_first_search</code> using <code>util.Queue</code>.</p>
+          <p>Implement <code>breadth_first_search</code> using <code>util.Queue</code>. Guarantees the shortest path (fewest actions).</p>
+          <ul>
+            <li>Also works on the 8-puzzle (no Pac-Man-specific code)</li>
+          </ul>
+          <pre>python main.py -l mediumMaze -p SearchAgent -a fn=bfs
+python main.py -l bigMaze -p SearchAgent -a fn=bfs -z .5</pre>
         </article>
+
         <article class="q-card">
           <span class="badge">Q3 — 9 pts</span>
           <h3>Uniform Cost Search</h3>
-          <p>Implement <code>uniform_cost_search</code> with cumulative-cost priorities.</p>
+          <p>Implement <code>uniform_cost_search</code> with cumulative-cost priorities. Handles varying step costs unlike BFS.</p>
+          <pre>python main.py -l mediumMaze -p SearchAgent -a fn=ucs
+python main.py -l mediumDottedMaze -p StayEastSearchAgent
+python main.py -l mediumScaryMaze -p StayWestSearchAgent</pre>
         </article>
+
         <article class="q-card">
           <span class="badge">Q4 — 9 pts</span>
           <h3>A* Search</h3>
-          <p>Implement <code>a_star_search</code> using <code>f(n) = g(n) + h(n)</code>.</p>
+          <p>Implement <code>a_star_search</code> using <code>f(n) = g(n) + h(n)</code>. When <code>heuristic=null_heuristic</code> it reduces to UCS.</p>
+          <pre>python main.py -l bigMaze -z .5 -p SearchAgent \
+  -a fn=astar,heuristic=manhattan_heuristic</pre>
         </article>
+
         <article class="q-card">
           <span class="badge">Q5 — 9 pts</span>
           <h3>Corners Problem</h3>
-          <p>Define state, goal test, and successor function for all-corners coverage.</p>
+          <p class="dep">Depends on Q2 (BFS)</p>
+          <p>Define state, goal test, and successor function for all-corners coverage. State must be <strong>hashable</strong>.</p>
+          <ul>
+            <li>Encode position <em>and</em> which corners are visited</li>
+            <li>Use a tuple, not a list</li>
+          </ul>
+          <pre>python main.py -l tinyCorners -p SearchAgent \
+  -a fn=bfs,prob=CornersProblem
+python main.py -l mediumCorners -p SearchAgent \
+  -a fn=bfs,prob=CornersProblem</pre>
         </article>
+
         <article class="q-card">
           <span class="badge">Q6 — 9 pts</span>
           <h3>Corners Heuristic</h3>
-          <p>Create a consistent heuristic for <code>CornersProblem</code>.</p>
+          <p class="dep">Depends on Q4 (A*)</p>
+          <p>Create a <strong>consistent</strong> heuristic for <code>CornersProblem</code>. Graded by nodes expanded on <code>mediumCorners</code>:</p>
+          <table style="font-size:0.85rem; margin-top:6px;">
+            <thead><tr><th>Nodes expanded</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>&gt; 2000</td><td>0 / 9</td></tr>
+              <tr><td>≤ 2000</td><td>3 / 9</td></tr>
+              <tr><td>≤ 1600</td><td>6 / 9</td></tr>
+              <tr><td>≤ 1200</td><td>9 / 9</td></tr>
+            </tbody>
+          </table>
+          <pre>python main.py -l mediumCorners \
+  -p AStarCornersAgent -z 0.5</pre>
         </article>
+
         <article class="q-card">
           <span class="badge">Q7 — 12 pts</span>
           <h3>Food Heuristic</h3>
-          <p>Design an admissible/consistent heuristic for <code>FoodSearchProblem</code>.</p>
+          <p class="dep">Depends on Q4 (A*)</p>
+          <p>Design an admissible/consistent heuristic for <code>FoodSearchProblem</code>. Graded by nodes expanded on <code>trickySearch</code>:</p>
+          <table style="font-size:0.85rem; margin-top:6px;">
+            <thead><tr><th>Nodes expanded</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>&gt; 15 000</td><td>3 / 12</td></tr>
+              <tr><td>≤ 15 000</td><td>6 / 12</td></tr>
+              <tr><td>≤ 12 000</td><td>9 / 12</td></tr>
+              <tr><td>≤ 7 000</td><td>12 / 12</td></tr>
+            </tbody>
+          </table>
+          <pre>python main.py -l trickySearch \
+  -p AStarFoodSearchAgent</pre>
         </article>
+
         <article class="q-card">
           <span class="badge">Q8 — 9 pts</span>
           <h3>Closest Dot Search</h3>
-          <p>Implement nearest-food pathing in <code>ClosestDotSearchAgent</code>.</p>
+          <p>Implement <code>AnyFoodSearchProblem.is_goal_state</code> (check <code>self.food[x][y]</code>) and <code>ClosestDotSearchAgent.find_path_to_closest_dot</code> (BFS on <code>AnyFoodSearchProblem</code>).</p>
+          <pre>python main.py -l bigSearch \
+  -p ClosestDotSearchAgent -z .5</pre>
         </article>
+
       </div>
     </section>
 
+    <!-- ── ALGORITHM HINTS ── -->
     <section class="section">
-      <h2>Testing Commands</h2>
-      <pre>python grader/autograder.py
-python grader/autograder.py -q q1
-python grader/autograder.py -q q8
-python grader/autograder.py --no-graphics</pre>
+      <h2>General Algorithm Hints</h2>
+      <h3>Graph Search Pattern (all four algorithms share this skeleton)</h3>
+      <pre>1. Initialize the frontier with the start state
+2. Initialize an empty set of visited states
+3. While the frontier is not empty:
+   a. Pop a node from the frontier
+   b. If this node is the goal → return the path
+   c. If this node has been visited → skip it
+   d. Mark this node as visited
+   e. For each successor not yet visited → add to frontier
+4. Return failure (no path found)</pre>
+
+      <p>The <strong>only difference</strong> between the four algorithms is the frontier data structure and priority:</p>
+      <table class="algo-table">
+        <thead><tr><th>Algorithm</th><th>Frontier</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td>DFS</td><td><code>Stack</code></td><td>Last in, first out</td></tr>p
+          <tr><td>BFS</td><td><code>Queue</code></td><td>First in, first out</td></tr>
+          <tr><td>UCS</td><td><code>PriorityQueue</code></td><td>Cumulative path cost g(n)</td></tr>
+          <tr><td>A*</td><td><code>PriorityQueue</code></td><td>g(n) + h(n)</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:16px;">Common mistakes to avoid</h3>
+      <ul>
+        <li><strong>Tree search instead of graph search</strong> — always track visited states; without this your algorithm may loop forever.</li>
+        <li><strong>Checking goal at push time vs. pop time</strong> — check goal when you <em>pop</em> a node, not when you push. This is required for UCS and A* correctness.</li>
+        <li><strong>Mutable state in tuples</strong> — if your state includes a list, convert it to a tuple before adding to the visited set (lists are not hashable).</li>
+        <li><strong>Forgetting the path</strong> — each frontier entry should carry the sequence of actions taken to reach that state.</li>
+      </ul>
     </section>
 
+    <!-- ── TESTING ── -->
+    <section class="section">
+      <h2>Testing Your Implementation</h2>
+
+      <h3>Self-check tests (<code>tests/check.py</code>) — 45 tests total</h3>
+      <pre># Run all tests
+pytest tests/check.py -v
+
+# Run tests for a specific question
+pytest tests/check.py -v -k "q1"
+pytest tests/check.py -v -k "q2"
+pytest tests/check.py -v -k "q3"
+pytest tests/check.py -v -k "q4"
+pytest tests/check.py -v -k "q5"
+pytest tests/check.py -v -k "q6"
+pytest tests/check.py -v -k "q7"
+pytest tests/check.py -v -k "q8"
+
+# Run a single test by name
+pytest tests/check.py -v -k "test_q1_pacman_tiny_maze"</pre>
+
+      <h3>Official autograder</h3>
+      <pre>python grader/autograder.py --no-graphics           # all questions
+python grader/autograder.py --no-graphics -q q1      # one question
+python grader/autograder.py --no-graphics --mute</pre>
+
+      <h3>What each pytest test checks</h3>
+      <p><strong>Q1–Q4:</strong> 6 tests each</p>
+      <table>
+        <thead><tr><th>Test</th><th>What It Verifies</th></tr></thead>
+        <tbody>
+          <tr><td><code>returns_list</code></td><td>Function returns a <code>list</code>, not <code>None</code></td></tr>
+          <tr><td><code>simple_path</code> / <code>finds_shortest_path</code></td><td>Correct result on a small graph</td></tr>
+          <tr><td><code>graph_backtrack</code> / algorithm-specific</td><td>Algorithm-specific behaviour</td></tr>
+          <tr><td><code>handles_cycles</code></td><td>Visited set prevents infinite loops</td></tr>
+          <tr><td><code>start_is_goal</code></td><td>Returns <code>[]</code> when start state is already the goal</td></tr>
+          <tr><td><code>pacman_tiny_maze</code></td><td>Runs on an actual Pac-Man maze layout</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top:12px;"><strong>Q5 (Corners Problem):</strong> 5 tests</p>
+      <table>
+        <thead><tr><th>Test</th><th>What It Verifies</th></tr></thead>
+        <tbody>
+          <tr><td><code>get_start_state</code></td><td>Returns a non-None, hashable state</td></tr>
+          <tr><td><code>start_not_goal</code></td><td>Start is not a goal (corners not yet visited)</td></tr>
+          <tr><td><code>get_successors</code></td><td>Valid <code>(state, action, cost)</code> triples with hashable states</td></tr>
+          <tr><td><code>tiny_corners</code></td><td>BFS solves tinyCorners in exactly 28 steps (optimal)</td></tr>
+          <tr><td><code>successor_updates_corners</code></td><td>State correctly tracks visited corners</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top:12px;"><strong>Q6 / Q7 heuristics</strong> print your grade tier:</p>
+      <pre>tests/check.py::TestQ6_CornersHeuristic::test_q6_medium_corners PASSED
+  [Q6] mediumCorners: expanded 1100 nodes → 9/9
+
+tests/check.py::TestQ7_FoodHeuristic::test_q7_tricky_search PASSED
+  [Q7] trickySearch: expanded 6800 nodes → 12/12</pre>
+    </section>
+
+    <!-- ── USEFUL COMMANDS ── -->
+    <section class="section">
+      <h2>Useful Command-Line Options</h2>
+      <pre>python main.py --help                # Show all options
+
+# Layout selection
+python main.py -l smallMaze
+
+# Agent and algorithm selection
+python main.py -p SearchAgent -a fn=bfs
+python main.py -p SearchAgent -a fn=ucs
+python main.py -p SearchAgent -a fn=astar,heuristic=manhattan_heuristic
+python main.py -p SearchAgent -a fn=bfs,prob=CornersProblem
+python main.py -p AStarCornersAgent
+python main.py -p AStarFoodSearchAgent
+
+# Display options
+python main.py --frameTime 0         # Instant moves (no animation delay)
+python main.py -z 0.5                # Zoom out for large mazes
+python main.py -q                    # Quiet mode (no graphics)
+python main.py --textGraphics        # Text-only display (no Tkinter needed)</pre>
+    </section>
+
+    <!-- ── TROUBLESHOOTING ── -->
+    <section class="section">
+      <h2>Troubleshooting</h2>
+
+      <h3>"Method not implemented" / <code>SystemExit: 1</code></h3>
+      <p>You haven't filled in a <code># TODO</code> section yet. The stub calls <code>util.raise_not_defined()</code>. Replace it with your implementation.</p>
+
+      <h3><code>TypeError: unhashable type: 'list'</code></h3>
+      <p>Your state uses a list somewhere. Convert to a tuple:</p>
+      <pre># Wrong
+state = (position, [True, False, True, False])
+
+# Correct
+state = (position, (True, False, True, False))</pre>
+
+      <h3>"Path goes through a wall"</h3>
+      <p>Your <code>get_successors()</code> generates invalid moves. Check <code>self.walls[next_x][next_y]</code> before adding a successor.</p>
+
+      <h3>Q5 fails even though Q1–Q4 pass</h3>
+      <p>Q5 depends on Q2 (BFS). Verify BFS first:</p>
+      <pre>pytest tests/check.py -v -k "q2"</pre>
+
+      <h3>Q6 / Q7 pass but with a low grade tier</h3>
+      <p>Your heuristic is admissible but not tight enough. Tips:</p>
+      <ul>
+        <li><strong>Q6:</strong> Instead of distance to the <em>farthest</em> corner alone, estimate the total tour through all unvisited corners.</li>
+        <li><strong>Q7:</strong> Instead of distance to the farthest food, consider the <code>maze_distance</code> between the two food pellets that are farthest apart from each other.</li>
+      </ul>
+
+      <h3>Tests hang or run forever</h3>
+      <p>Your algorithm has an infinite loop — you are doing tree search instead of graph search. Add a <code>visited</code> set and skip states you've already expanded.</p>
+
+      <h3>No graphics / Tkinter errors</h3>
+      <pre>python main.py -q               # No graphics at all
+python main.py --textGraphics   # Text-only display</pre>
+      <p>The pytest tests in <code>tests/check.py</code> never require graphics — they always work headless.</p>
+    </section>
+
+    <!-- ── POINTS BREAKDOWN ── -->
     <section class="section">
       <h2>Points Breakdown</h2>
       <table>
         <thead>
-          <tr><th>Component</th><th>Points</th></tr>
+          <tr><th>Question</th><th>Topic</th><th>Points</th></tr>
         </thead>
         <tbody>
-          <tr><td>Q1–Q8 Code</td><td>75</td></tr>
-          <tr><td>Report</td><td>25</td></tr>
-          <tr><td><strong>Total</strong></td><td><strong>100</strong></td></tr>
+          <tr><td>Q1</td><td>Depth-First Search</td><td>9</td></tr>
+          <tr><td>Q2</td><td>Breadth-First Search</td><td>9</td></tr>
+          <tr><td>Q3</td><td>Uniform Cost Search</td><td>9</td></tr>
+          <tr><td>Q4</td><td>A* Search</td><td>9</td></tr>
+          <tr><td>Q5</td><td>Corners Problem (state representation)</td><td>9</td></tr>
+          <tr><td>Q6</td><td>Corners Heuristic</td><td>9</td></tr>
+          <tr><td>Q7</td><td>Food Search Heuristic</td><td>12</td></tr>
+          <tr><td>Q8</td><td>Closest Dot Search</td><td>9</td></tr>
+          <tr><td><strong>Code Subtotal</strong></td><td></td><td><strong>75</strong></td></tr>
+          <tr><td>Report</td><td>Written report</td><td>25</td></tr>
+          <tr><td><strong>Total</strong></td><td></td><td><strong>100</strong></td></tr>
         </tbody>
       </table>
     </section>
+
+    <!-- ── ACADEMIC INTEGRITY ── -->
+    <section class="section">
+      <h2>Academic Integrity</h2>
+      <ul>
+        <li>Do <strong>not</strong> distribute or publish solutions.</li>
+        <li>Do <strong>not</strong> copy solutions from the internet.</li>
+        <li>You <strong>may</strong> discuss general approaches with classmates, but write your own code.</li>
+      </ul>
+    </section>
+
   </main>
 
   <footer>
+    Based on the UC Berkeley CS 188 Pac-Man AI Projects by John DeNero and Dan Klein ·
+    Modified by Amin D. Alamdari, 2026 ·
     © 2026 Pac-Man Search Homework Page
   </footer>
 </body>
