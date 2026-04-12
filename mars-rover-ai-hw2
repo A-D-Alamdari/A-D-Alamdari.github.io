@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS451/551 Homework 2: Reinforcement Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f7;
+  --bg-card: #ffffff;
+  --bg-code: #f4f0eb;
+  --bg-hero: linear-gradient(135deg, #1a0e0a 0%, #2d1810 40%, #3d1f14 100%);
+  --text: #2c2520;
+  --text-secondary: #6b5e56;
+  --text-dim: #9a8d85;
+  --border: #e0d8d0;
+  --border-light: #ece6df;
+  --accent: #c8621a;
+  --accent-light: #f0a050;
+  --accent-bg: #fdf3e8;
+  --green: #1a8a50;
+  --green-bg: #edf7f0;
+  --red: #c0392b;
+  --red-bg: #fdf0ee;
+  --blue: #2a6faa;
+  --blue-bg: #eef4fa;
+  --purple: #7b4ea0;
+  --gold: #f0c850;
+  --font-display: 'Source Serif 4', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.04);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+/* ─── Hero ─── */
+.hero { background: var(--bg-hero); color: #f0e8e0; padding: 60px 24px 50px; text-align: center; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 40%, rgba(200,98,26,0.15) 0%, transparent 60%), radial-gradient(circle at 70% 60%, rgba(240,200,80,0.08) 0%, transparent 50%); }
+.hero-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+.hero-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c89060; margin-bottom: 16px; }
+.hero h1 { font-family: var(--font-display); font-size: clamp(32px, 5vw, 48px); font-weight: 700; line-height: 1.2; margin-bottom: 6px; color: #f0c850; }
+.hero h2 { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: #c89060; margin-bottom: 20px; }
+.hero-img { width: 180px; height: auto; margin: 20px auto; display: block; filter: drop-shadow(0 4px 20px rgba(240,200,80,0.3)); }
+.hero p { font-size: 16px; line-height: 1.8; color: #c8b8a8; max-width: 600px; margin: 0 auto; }
+.hero-meta { font-family: var(--font-mono); font-size: 11px; color: #a08060; margin-top: 20px; letter-spacing: 1px; }
+.hero-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.hero-links a { font-family: var(--font-mono); font-size: 12px; color: #f0c850; background: rgba(240,200,80,0.1); border: 1px solid rgba(240,200,80,0.25); padding: 6px 16px; border-radius: 6px; text-decoration: none; transition: all 0.2s; }
+.hero-links a:hover { background: rgba(240,200,80,0.2); border-color: rgba(240,200,80,0.5); }
+
+/* ─── Content ─── */
+main { padding: 40px 0 80px; }
+section { margin-bottom: 48px; }
+h2 { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+h3 { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text); margin: 28px 0 10px; }
+h4 { font-family: var(--font-body); font-size: 16px; font-weight: 700; margin: 20px 0 8px; }
+p { margin-bottom: 14px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+strong { font-weight: 600; }
+ul, ol { margin: 10px 0 14px 24px; }
+li { margin-bottom: 4px; }
+hr { border: none; border-top: 1px solid var(--border-light); margin: 36px 0; }
+
+/* ─── Code ─── */
+code { font-family: var(--font-mono); font-size: 14px; background: var(--bg-code); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
+pre { background: var(--bg-code); border: 1px solid var(--border-light); border-radius: var(--radius); padding: 16px 20px; overflow-x: auto; margin: 14px 0; }
+pre code { background: none; padding: 0; color: var(--text); font-size: 13px; line-height: 1.6; }
+
+/* ─── Tables ─── */
+table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+th { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-secondary); text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); background: var(--bg-code); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(200,150,100,0.04); }
+
+/* ─── Cards ─── */
+.card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius); padding: 20px 24px; margin: 16px 0; box-shadow: var(--shadow); }
+.card.warning { border-left: 4px solid var(--red); background: var(--red-bg); }
+.card.info { border-left: 4px solid var(--blue); background: var(--blue-bg); }
+.card.hint { border-left: 4px solid var(--green); background: var(--green-bg); }
+.card.story { border-left: 4px solid var(--accent); background: var(--accent-bg); }
+.card-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+.card-label.red { color: var(--red); }
+.card-label.blue { color: var(--blue); }
+.card-label.green { color: var(--green); }
+.card-label.accent { color: var(--accent); }
+
+/* ─── Question Blocks ─── */
+.question-block { margin: 32px 0; }
+.question-header { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 24px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; }
+.question-pts { font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #fff; background: var(--accent); padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+.question-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+.question-dep { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); margin-left: auto; }
+.question-body { border: 1px solid var(--border-light); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: 20px 24px; background: var(--bg-card); }
+
+/* ─── Details/Summary ─── */
+details { margin: 14px 0; }
+summary { cursor: pointer; font-weight: 600; color: var(--accent); padding: 8px 0; user-select: none; }
+summary:hover { color: var(--text); }
+details[open] summary { margin-bottom: 10px; }
+
+/* ─── Grid Diagrams ─── */
+.grid-diagram { display: inline-grid; gap: 3px; margin: 16px 0; }
+.grid-cell { width: 58px; height: 50px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 13px; font-weight: 700; border-radius: 4px; border: 1px solid; }
+.cell-open { background: #f5f0ea; border-color: #ddd5cc; color: #bbb0a5; }
+.cell-wall { background: #d5ccc2; border-color: #c0b5aa; color: #a09585; }
+.cell-start { background: #ddeeff; border-color: #aaccee; color: #2a6faa; }
+.cell-pos { background: #ddf5e5; border-color: #a0ddb5; color: #1a8a50; }
+.cell-neg { background: #fde5e2; border-color: #f0b0a5; color: #c0392b; }
+
+/* ─── Badge ─── */
+.badge { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; vertical-align: middle; }
+.badge-edit { background: #fde5e2; color: var(--red); }
+.badge-read { background: #ddeeff; color: var(--blue); }
+
+/* ─── Footer ─── */
+.footer { text-align: center; padding: 40px 24px; font-size: 13px; color: var(--text-dim); border-top: 1px solid var(--border-light); }
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .hero { padding: 40px 16px 30px; }
+  .hero h1 { font-size: 28px; }
+  .question-header { flex-wrap: wrap; }
+  .question-dep { margin-left: 0; }
+  table { font-size: 13px; }
+  th, td { padding: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">CS451/551 · Reinforcement Learning · Homework 2</div>
+    <h1>Assignment 2: Reinforcement Learning</h1>
+    <h2>Mars Rover — Red Planet Rescue</h2>
+    <svg class="hero-img" width="180" height="120" viewBox="0 0 180 120">
+      <ellipse cx="90" cy="108" rx="60" ry="8" fill="rgba(120,70,40,0.4)"/>
+      <circle cx="55" cy="95" r="12" fill="#5a3a20" stroke="#907050" stroke-width="1.5"/>
+      <circle cx="125" cy="95" r="12" fill="#5a3a20" stroke="#907050" stroke-width="1.5"/>
+      <rect x="48" y="78" width="84" height="6" rx="3" fill="#8a6a40"/>
+      <rect x="42" y="55" width="96" height="28" rx="10" fill="#c8a840" stroke="#e8d070" stroke-width="2"/>
+      <rect x="56" y="40" width="68" height="18" rx="7" fill="#b89838" stroke="#d8c060" stroke-width="1.5"/>
+      <rect x="18" y="28" width="36" height="16" rx="3" fill="#3860a0" stroke="#5888c8" stroke-width="1"/>
+      <rect x="126" y="28" width="36" height="16" rx="3" fill="#3860a0" stroke="#5888c8" stroke-width="1"/>
+      <line x1="56" y1="48" x2="36" y2="40" stroke="#a08030" stroke-width="2.5"/>
+      <line x1="124" y1="48" x2="144" y2="40" stroke="#a08030" stroke-width="2.5"/>
+      <circle cx="68" cy="67" r="8" fill="#1a2840" stroke="#4080c0" stroke-width="1.5"/>
+      <circle cx="68" cy="67" r="5" fill="#80c0ff"/>
+      <circle cx="65" cy="64" r="2" fill="#fff"/>
+      <line x1="112" y1="40" x2="112" y2="16" stroke="#b09050" stroke-width="2"/>
+      <circle cx="112" cy="13" r="4" fill="#e04040"/>
+      <text x="96" y="74" font-family="monospace" font-size="13" fill="#7a6030" font-weight="bold" text-anchor="middle">R-7</text>
+    </svg>
+    <p>
+      In this project your Mars Rover agent will navigate treacherous Martian terrain &mdash;
+      avoiding craters and collecting geological samples. You will implement
+      <strong>Value Iteration</strong>, <strong>Q-Learning</strong>, and
+      <strong>Approximate Q-Learning</strong> to teach Rover-7 to act optimally
+      under stochastic solar interference.
+    </p>
+    <div class="hero-meta">75 Points · 6 Questions · Python 3.10+</div>
+    <div class="hero-links">
+      <a href="#">CS 451/551 Course Link (TBA)</a>
+      <a href="https://github.com/A-D-Alamdari/" target="_blank">Homework's Github Repository</a>
+      <a href="#">Repository README</a>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+
+<!-- ═══════════════ COMPATIBILITY ═══════════════ -->
+<section>
+<h2>Compatibility &amp; Prerequisites</h2>
+<p>This project has been tested and works on <strong>Linux, macOS, and Windows</strong>.</p>
+<ul>
+  <li><strong>Python 3.10+</strong> — no external packages required (only the standard library)</li>
+  <li><strong>Pygame</strong> — optional, for the animated Mars GUI display</li>
+</ul>
+<h4>Install Pygame (optional)</h4>
+<pre><code>pip install pygame</code></pre>
+<p>The autograder, self-check, and all tests run <strong>without</strong> Pygame. The GUI is purely for visualization and exploration.</p>
+<h4>Verify your setup</h4>
+<pre><code>python mars_rover.py -m</code></pre>
+<p>If Pygame is installed, you'll see an animated Mars surface. Use arrow keys to control the rover. Without Pygame, text mode activates automatically.</p>
+<pre><code>python mars_rover.py -t   # Force text mode (no Pygame needed)</code></pre>
+</section>
+
+<!-- ═══════════════ LEARNING OBJECTIVES ═══════════════ -->
+<section>
+<h2>Learning Objectives</h2>
+<ul>
+  <li>Implement <strong>Value Iteration</strong> for offline MDP planning with batch Bellman updates.</li>
+  <li>Understand how discount factor, noise, and living reward shape optimal policies.</li>
+  <li>Implement <strong>Q-Learning</strong> for model-free reinforcement learning from experience.</li>
+  <li>Balance <strong>exploration vs. exploitation</strong> using epsilon-greedy action selection.</li>
+  <li>Implement <strong>Approximate Q-Learning</strong> with feature-based generalization.</li>
+  <li>See why tabular methods fail on large state spaces and why feature weights generalize.</li>
+</ul>
+</section>
+
+<!-- ═══════════════ PROJECT STRUCTURE ═══════════════ -->
+<section>
+<h2>Project Structure</h2>
+<details>
+<summary>Show / hide directory tree</summary>
+<pre><code>mars_rover_rl/
+├── mars_rover.py                  # Entry point — run this to start
+├── autograder.py                   # Official autograder (75 pts)
+├── check.py                       # Self-check (3 maps, no grade)
+├── generate_solutions.py           # Instructor only
+├── project_params.py               # Project metadata
+├── util.py                         # Data structures: Counter, sampling
+│
+├── env/                            # Environment package
+│   ├── mdp.py                     # Abstract MDP interface
+│   ├── environment.py             # Abstract Environment interface
+│   ├── mars_grid.py               # MarsGrid MDP, layout loader
+│   ├── crawler.py                 # Crawler robot domain
+│   └── feature_extractors.py      # Feature functions for Approx Q
+│
+├── agents/                         # Agent base classes
+│   └── learning_agents.py         # ValueEstimationAgent, ReinforcementAgent
+│
+├── students/                       # ✏ YOUR CODE — only edit these
+│   ├── value_iteration_agents.py  # ✏ Q1: Value Iteration
+│   ├── qlearning_agents.py        # ✏ Q3, Q4, Q6: Q-Learning
+│   └── analysis.py                # ✏ Q2: Policy parameters
+│
+├── display/                        # Visualization (optional)
+│   ├── gui_display.py             # Pygame animated Mars display
+│   ├── text_display.py            # ASCII terminal display
+│   └── crawler_gui.py             # Pygame crawler display
+│
+├── grading/                        # Test framework
+│   ├── grading.py                 # Grade tracker
+│   ├── test_parser.py             # .test/.solution file parser
+│   ├── test_classes.py            # Question/TestCase base classes
+│   └── mars_test_classes.py       # Project-specific test logic
+│
+├── layouts/                        # 12 grid layout files (.lay)
+│
+├── test_cases/                     # 22 test cases (q1–q6)
+│   ├── q1/ ... q6/               # CONFIG + .test + .solution per question
+│
+└── solutions/                      # 🔒 Instructor only
+    └── solutions.py</code></pre>
+</details>
+
+<h3>Files you will edit</h3>
+<p>You only need to modify <strong>three files</strong> inside the <code>students/</code> directory.
+All places are marked with <code># *** YOUR CODE HERE ***</code> comments.
+<strong>Do not modify any other files.</strong></p>
+
+<table>
+<thead><tr><th>File</th><th>What you implement</th></tr></thead>
+<tbody>
+<tr><td><code>students/value_iteration_agents.py</code> <span class="badge badge-edit">EDIT</span></td><td>Value Iteration agent (Q1)</td></tr>
+<tr><td><code>students/qlearning_agents.py</code> <span class="badge badge-edit">EDIT</span></td><td>Q-Learning, ε-greedy, Approximate Q-Learning (Q3, Q4, Q6)</td></tr>
+<tr><td><code>students/analysis.py</code> <span class="badge badge-edit">EDIT</span></td><td>Policy parameter choices for Canyon Grid (Q2)</td></tr>
+</tbody>
+</table>
+
+<h3>Exact methods to implement</h3>
+
+<h4><code>students/value_iteration_agents.py</code> — 3 methods</h4>
+<table>
+<thead><tr><th>Method</th><th>Q</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>run_value_iteration()</code></td><td>Q1</td><td>Main VI loop — batch Bellman updates for <em>k</em> iterations</td></tr>
+<tr><td><code>compute_q_value_from_values(state, action)</code></td><td>Q1</td><td>Q(s,a) = Σ T(s,a,s')·[R(s,a,s') + γ·V(s')]</td></tr>
+<tr><td><code>compute_action_from_values(state)</code></td><td>Q1</td><td>Best action from current values (argmax over Q)</td></tr>
+</tbody>
+</table>
+
+<h4><code>students/qlearning_agents.py</code> — 7 methods</h4>
+<table>
+<thead><tr><th>Class / Method</th><th>Q</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>QLearningAgent.get_q_value(state, action)</code></td><td>Q3</td><td>Return Q-value from Counter (default 0)</td></tr>
+<tr><td><code>QLearningAgent.compute_value_from_q_values(state)</code></td><td>Q3</td><td>V(s) = max_a Q(s,a); return 0 if terminal</td></tr>
+<tr><td><code>QLearningAgent.compute_action_from_q_values(state)</code></td><td>Q3</td><td>Best action — <strong>break ties randomly</strong></td></tr>
+<tr><td><code>QLearningAgent.get_action(state)</code></td><td>Q4</td><td>ε-greedy: random with prob ε, else best</td></tr>
+<tr><td><code>QLearningAgent.update(state, action, next_state, reward)</code></td><td>Q3</td><td>Q-learning update rule</td></tr>
+<tr><td><code>ApproximateQAgent.get_q_value(state, action)</code></td><td>Q6</td><td>Dot product: w · f(s,a)</td></tr>
+<tr><td><code>ApproximateQAgent.update(state, action, next_state, reward)</code></td><td>Q6</td><td>Weight update: w_i += α · δ · f_i(s,a)</td></tr>
+</tbody>
+</table>
+
+<h4><code>students/analysis.py</code> — 5 functions</h4>
+<table>
+<thead><tr><th>Function</th><th>Q</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>question2a()</code></td><td>Q2</td><td>Return (discount, noise, living_reward) → close exit, risk cliff</td></tr>
+<tr><td><code>question2b()</code></td><td>Q2</td><td>Close exit, avoid cliff</td></tr>
+<tr><td><code>question2c()</code></td><td>Q2</td><td>Distant depot, risk cliff</td></tr>
+<tr><td><code>question2d()</code></td><td>Q2</td><td>Distant depot, avoid cliff</td></tr>
+<tr><td><code>question2e()</code></td><td>Q2</td><td>Never terminate (wander forever)</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ═══════════════ GETTING STARTED ═══════════════ -->
+<section>
+<h2>Getting Started</h2>
+
+<h3>Step 1 — Run the grid world manually</h3>
+<pre><code>python mars_rover.py -m</code></pre>
+<p>Use arrow keys to move the rover. Press Enter/Space to extract at a sample site or crater. This helps you understand the grid mechanics, especially how <strong>solar interference</strong> makes you slip sideways.</p>
+
+<h3>Step 2 — Try different layouts</h3>
+<pre><code>python mars_rover.py -m -g base_camp_grid
+python mars_rover.py -m -g canyon_grid
+python mars_rover.py -m -g maze_grid
+python mars_rover.py --list-layouts        # See all 12 available grids</code></pre>
+
+<h3>Step 3 — Understand the Mars Grid MDP</h3>
+<p>Every grid cell is one of:</p>
+<div style="text-align:center">
+<div class="grid-diagram" style="grid-template-columns:repeat(4,58px)">
+  <div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-neg">-1</div>
+  <div class="grid-cell cell-open"></div><div class="grid-cell cell-wall">##</div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div>
+  <div class="grid-cell cell-start">S</div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-pos">+1</div>
+</div>
+</div>
+<p style="text-align:center;font-size:13px;color:var(--text-dim)">
+<strong>S</strong> = Start &nbsp;|&nbsp; <strong>##</strong> = Wall &nbsp;|&nbsp; <span style="color:var(--green)">+1</span> = Sample &nbsp;|&nbsp; <span style="color:var(--red)">-1</span> = Crater &nbsp;|&nbsp; Empty = Open terrain
+</p>
+
+<p><strong>Movement noise (solar interference):</strong> When the rover chooses to go north:</p>
+<ul>
+  <li><strong>80%</strong> chance it actually goes north (intended)</li>
+  <li><strong>10%</strong> chance it slips west (perpendicular)</li>
+  <li><strong>10%</strong> chance it slips east (perpendicular)</li>
+</ul>
+<p>If the rover would hit a wall, it stays in place. At terminal cells (samples/craters), the only action is <code>extract</code>, which ends the episode.</p>
+
+<h3>Step 4 — Understand the key parameters</h3>
+<pre><code>python mars_rover.py -a value --discount 0.9 --noise 0.2 --living-reward 0.0</code></pre>
+<ul>
+  <li><strong>Discount (γ)</strong> — how much future rewards matter (0 = myopic, 1 = far-sighted)</li>
+  <li><strong>Noise</strong> — probability of slipping sideways (0 = deterministic, 0.2 = default)</li>
+  <li><strong>Living reward</strong> — reward per non-terminal step (negative = hurry, positive = wander)</li>
+</ul>
+</section>
+
+<!-- ═══════════════ QUESTIONS ═══════════════ -->
+<section>
+<h2>Homework Tasks (Q1–Q6)</h2>
+
+<!-- Q1 -->
+<div class="question-block">
+<div class="question-header">
+  <span class="question-pts">18 pts</span>
+  <span class="question-title">Q1 — Value Iteration</span>
+</div>
+<div class="question-body">
+<p>Implement <code>ValueIterationAgent</code> — an offline planner that computes optimal values using the Bellman equation:</p>
+<pre><code>V_{k+1}(s) = max_a  Σ_{s'} T(s,a,s') · [R(s,a,s') + γ · V_k(s')]</code></pre>
+<p>Implement three methods in <code>students/value_iteration_agents.py</code>:</p>
+<ol>
+  <li><code>run_value_iteration()</code> — the main loop (batch updates!)</li>
+  <li><code>compute_q_value_from_values(state, action)</code> — Q from V</li>
+  <li><code>compute_action_from_values(state)</code> — best action from V</li>
+</ol>
+<div class="card warning">
+  <div class="card-label red">Important</div>
+  <p>Use <strong>batch</strong> value iteration: create a new Counter for V<sub>k+1</sub> each iteration.
+  Compute ALL new values from old values, then replace. <strong>Do not update in-place.</strong></p>
+</div>
+<pre><code>python mars_rover.py -a value -i 100 -k 10           # Run VI, 100 sweeps, 10 test episodes
+python mars_rover.py -a value -i 5 -g base_camp_grid  # Watch 5 iterations converge
+python autograder.py -q q1                              # Grade Q1</code></pre>
+</div>
+</div>
+
+<!-- Q2 -->
+<div class="question-block">
+<div class="question-header">
+  <span class="question-pts">18 pts</span>
+  <span class="question-title">Q2 — Mission Profiles (Policies)</span>
+  <span class="question-dep">Depends on Q1</span>
+</div>
+<div class="question-body">
+<p>The <strong>Canyon Grid</strong> has a close exit (+1), a distant depot (+10), and a crater cliff (-10 each along the bottom):</p>
+<div style="text-align:center">
+<div class="grid-diagram" style="grid-template-columns:repeat(5,58px)">
+  <div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-pos">+1</div>
+  <div class="grid-cell cell-wall">##</div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-pos">+10</div>
+  <div class="grid-cell cell-start">S</div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div><div class="grid-cell cell-open"></div>
+  <div class="grid-cell cell-wall">##</div><div class="grid-cell cell-neg">-10</div><div class="grid-cell cell-neg">-10</div><div class="grid-cell cell-neg">-10</div><div class="grid-cell cell-neg">-10</div>
+</div>
+</div>
+<p>Choose <code>(discount, noise, living_reward)</code> to produce each behavior. Edit <code>students/analysis.py</code>:</p>
+<table>
+<thead><tr><th>Function</th><th>Desired behavior</th></tr></thead>
+<tbody>
+<tr><td><code>question2a</code></td><td>Prefer close exit (+1), <em>risking</em> the cliff</td></tr>
+<tr><td><code>question2b</code></td><td>Prefer close exit (+1), <em>avoiding</em> the cliff</td></tr>
+<tr><td><code>question2c</code></td><td>Prefer distant depot (+10), <em>risking</em> the cliff</td></tr>
+<tr><td><code>question2d</code></td><td>Prefer distant depot (+10), <em>avoiding</em> the cliff</td></tr>
+<tr><td><code>question2e</code></td><td>Avoid all exits and craters (never terminate)</td></tr>
+</tbody>
+</table>
+<pre><code>python mars_rover.py -g canyon_grid -a value --discount 0.9 --noise 0.2 --living-reward 0.0
+python autograder.py -q q2</code></pre>
+</div>
+</div>
+
+<!-- Q3 -->
+<div class="question-block">
+<div class="question-header">
+  <span class="question-pts">18 pts</span>
+  <span class="question-title">Q3 — Q-Learning</span>
+</div>
+<div class="question-body">
+<p>Implement a model-free agent that learns from experience. The Q-learning update rule:</p>
+<pre><code>Q(s,a) ← Q(s,a) + α · [r + γ · max_{a'} Q(s',a') - Q(s,a)]</code></pre>
+<p>Implement in <code>students/qlearning_agents.py</code>:</p>
+<ol>
+  <li><code>get_q_value(state, action)</code> — lookup from Counter</li>
+  <li><code>compute_value_from_q_values(state)</code> — max Q over actions</li>
+  <li><code>compute_action_from_q_values(state)</code> — best action (<strong>break ties randomly!</strong>)</li>
+  <li><code>update(state, action, next_state, reward)</code> — Q-learning update</li>
+</ol>
+<div class="card hint">
+  <div class="card-label green">Critical hint</div>
+  <p>Actions the rover has <strong>never tried</strong> have Q-value = 0 (Counter default).
+  If all tried actions have negative Q-values, an <strong>untried action (Q=0) is the best choice</strong>.
+  Don't skip unseen actions!</p>
+</div>
+<pre><code>python mars_rover.py -a q -k 5 -m        # Manual Q-learning (5 episodes)
+python mars_rover.py -a q -k 100          # Train 100 episodes
+python autograder.py -q q3</code></pre>
+</div>
+</div>
+
+<!-- Q4 -->
+<div class="question-block">
+<div class="question-header">
+  <span class="question-pts">7 pts</span>
+  <span class="question-title">Q4 — Epsilon-Greedy Exploration</span>
+  <span class="question-dep">Depends on Q3</span>
+</div>
+<div class="question-body">
+<p>Implement <code>get_action(state)</code> — the ε-greedy strategy:</p>
+<ul>
+  <li>With probability <strong>ε</strong>: take a <strong>random</strong> legal action (explore)</li>
+  <li>Otherwise: take the <strong>best</strong> action from Q-values (exploit)</li>
+</ul>
+<p>Use <code>util.flip_coin(self.epsilon)</code> and <code>random.choice(legal_actions)</code>.</p>
+<div class="card info">
+  <div class="card-label blue">Note</div>
+  <p>A random action <em>may</em> happen to be the best action — that's fine.
+  Don't filter out the optimal action during exploration.</p>
+</div>
+<p>After implementing Q4, the <strong>Mars Crawler</strong> robot should also work:</p>
+<pre><code>python -m env.crawler              # Run the crawler — should learn to crawl forward
+python autograder.py -q q4</code></pre>
+</div>
+</div>
+
+<!-- Q5 -->
+<div class="question-block">
+<div class="question-header">
+  <span class="question-pts">4 pts</span>
+  <span class="question-title">Q5 — Q-Learning on Mars</span>
+  <span class="question-dep">Depends on Q3 + Q4</span>
+</div>
+<div class="question-body">
+<p>Deploy your Q-learner on the <code>small_grid</code>. Train for 2000 episodes, then test for 100. Must win ≥ 80%.</p>
+<pre><code>python mars_rover.py -a q -k 2010 -g small_grid -e 0.05 --alpha 0.2 --discount 0.8 -q
+python autograder.py -q q5</code></pre>
+<div class="card warning">
+  <div class="card-label red">Why larger grids fail</div>
+  <p>On <code>medium_grid</code> or larger, tabular Q-learning cannot converge — every cell is a separate
+  state with separate Q-values. The rover has no way to generalize that "craters are bad everywhere."
+  This motivates Q6.</p>
+</div>
+</div>
+</div>
+
+<!-- Q6 -->
+<div class="question-block">
+<div class="question-header">
+  <span class="question-pts">10 pts</span>
+  <span class="question-title">Q6 — Approximate Q-Learning</span>
+  <span class="question-dep">Depends on Q3 + Q4</span>
+</div>
+<div class="question-body">
+<p>Instead of storing Q-values per state, learn <strong>feature weights</strong> that generalize:</p>
+<pre><code>Q(s,a) = Σ_i  w_i · f_i(s,a)
+
+difference = [r + γ · max_{a'} Q(s',a')] − Q(s,a)
+w_i ← w_i + α · difference · f_i(s,a)</code></pre>
+<p>Implement <code>get_q_value</code> (dot product) and <code>update</code> (weight update) in <code>ApproximateQAgent</code>.</p>
+<p>Features from <code>TerrainExtractor</code> include:</p>
+<ul>
+  <li><code>closest-sample-distance</code> — normalized Manhattan distance to nearest sample</li>
+  <li><code>#-of-craters-1-step-away</code> — count of adjacent crater cells</li>
+  <li><code>moves-toward-sample</code> — 1.0 if action reduces distance to goal</li>
+  <li><code>bias</code> — constant 1.0</li>
+</ul>
+<pre><code># Identity features (should match tabular Q-learning):
+python mars_rover.py -a q -g small_grid -k 100
+
+# Terrain features — generalizes to large grids:
+python mars_rover.py -a q -g large_grid -k 60
+python mars_rover.py -a q -g huge_grid -k 100
+
+python autograder.py -q q6</code></pre>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════ ALGORITHM HINTS ═══════════════ -->
+<section>
+<h2>Algorithm Reference</h2>
+<h3>Value Iteration vs. Q-Learning</h3>
+<table>
+<thead><tr><th>Property</th><th>Value Iteration (Q1)</th><th>Q-Learning (Q3)</th></tr></thead>
+<tbody>
+<tr><td>Has model?</td><td>Yes — knows T(s,a,s') and R</td><td>No — learns from experience</td></tr>
+<tr><td>Planning</td><td>Offline (before acting)</td><td>Online (while acting)</td></tr>
+<tr><td>Updates</td><td>Sweeps over ALL states</td><td>Updates ONE (s,a) per step</td></tr>
+<tr><td>Convergence</td><td>After enough iterations</td><td>After enough episodes</td></tr>
+</tbody>
+</table>
+
+<h3>Common mistakes to avoid</h3>
+<ul>
+  <li><strong>In-place VI updates</strong> — create a new Counter per iteration. Reading and writing <code>self.values</code> in the same sweep gives wrong results.</li>
+  <li><strong>Not breaking ties randomly (Q3)</strong> — if two actions have the same Q, use <code>random.choice()</code>. Without this, the rover gets stuck.</li>
+  <li><strong>Accessing Q-values directly (Q6)</strong> — always call <code>self.get_q_value()</code>, never <code>self.q_values[...]</code>. ApproximateQAgent overrides <code>get_q_value</code>.</li>
+  <li><strong>Forgetting unseen actions have Q=0</strong> — the Counter returns 0 for missing keys. If all tried actions have Q < 0, an untried action is optimal.</li>
+</ul>
+</section>
+
+<!-- ═══════════════ TESTING ═══════════════ -->
+<section>
+<h2>Testing Your Implementation</h2>
+
+<h3>Self-check (no grade)</h3>
+<pre><code>python check.py              # Run all checks on 3 maps
+python check.py -q q1        # Check only Q1</code></pre>
+<p>The self-check tests your code on <code>small_grid</code>, <code>base_camp_grid</code>, and <code>canyon_grid</code>.
+It shows ✅/❌ per check with diagnostic messages. <strong>No points or grades</strong> — purely for debugging.</p>
+
+<h3>Official autograder (75 points)</h3>
+<pre><code>python autograder.py                 # Grade all questions
+python autograder.py -q q1           # Grade one question
+python autograder.py --no-graphics   # Skip any display</code></pre>
+<p>The autograder tests across <strong>all 12 grid layouts</strong> with pre-computed reference solutions. Values must match within 0.01 tolerance.</p>
+
+<h3>What the autograder checks</h3>
+<table>
+<thead><tr><th>Question</th><th>What it verifies</th></tr></thead>
+<tbody>
+<tr><td>Q1</td><td>V(s), Q(s,a), and π(s) at iterations 0, 1, 2, and 100 on multiple grids</td></tr>
+<tr><td>Q2</td><td>Policy at key cells matches expected direction for each parameter tuple</td></tr>
+<tr><td>Q3</td><td>Q-values after fixed training episodes match reference (with seeded randomness)</td></tr>
+<tr><td>Q4</td><td>Best-action frequency falls in expected range for given ε; pure exploit at ε=0</td></tr>
+<tr><td>Q5</td><td>Win rate ≥ 80% on small_grid; crawler moves forward</td></tr>
+<tr><td>Q6</td><td>Learned weights match reference; Q(s,a) = w·f verified; works on large grids</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ═══════════════ CLI OPTIONS ═══════════════ -->
+<section>
+<h2>Useful Command-Line Options</h2>
+<pre><code># Layout selection
+python mars_rover.py -g canyon_grid
+python mars_rover.py -g huge_grid
+python mars_rover.py --list-layouts
+
+# Agent selection
+python mars_rover.py -a value -i 100    # Value Iteration, 100 sweeps
+python mars_rover.py -a q -k 500        # Q-Learning, 500 episodes
+python mars_rover.py -a random           # Random agent
+
+# Parameters
+python mars_rover.py --discount 0.9 --noise 0.2 --living-reward -0.04
+python mars_rover.py -e 0.3 --alpha 0.5  # Q-learning: ε and α
+
+# Display
+python mars_rover.py -t                  # Text mode (no Pygame)
+python mars_rover.py -m                  # Manual control (arrow keys)
+python mars_rover.py -q                  # Quiet (no transition output)
+
+# GUI keyboard shortcuts
+# V = show values   Q = show Q-values   P = show policy   ESC = quit</code></pre>
+</section>
+
+<!-- ═══════════════ TROUBLESHOOTING ═══════════════ -->
+<section>
+<h2>Troubleshooting</h2>
+
+<h4>"Method not implemented" / <code>NotImplementedError</code></h4>
+<p>You haven't filled in a <code># *** YOUR CODE HERE ***</code> section. Replace the <code>raise_not_defined()</code> call with your implementation.</p>
+
+<h4>V(start) is 0 after Value Iteration</h4>
+<p>You're using in-place updates. Create a <strong>new</strong> <code>Counter()</code> for V<sub>k+1</sub> each iteration, then replace <code>self.values</code> at the end of each sweep.</p>
+
+<h4>Q-Learning rover gets stuck</h4>
+<p>Check two things: (1) Are you breaking ties randomly in <code>compute_action_from_q_values</code>?
+(2) Are untried actions (Q=0) being considered? If all tried actions have negative Q, an untried action is best.</p>
+
+<h4>Approximate Q-Learning doesn't learn</h4>
+<p>Make sure you call <code>self.get_q_value()</code> in the <code>update</code> method, not <code>self.q_values[...]</code>.
+<code>ApproximateQAgent</code> overrides <code>get_q_value</code> — calling the parent's tabular version gives wrong gradients.</p>
+
+<h4>Q5 fails but Q3/Q4 pass</h4>
+<p>Q5 uses different learning parameters (ε=0.05, α=0.2, γ=0.8). Your Q-learning should work with any parameter values, not just the defaults.</p>
+
+<h4>Crawler doesn't move</h4>
+<p>Your Q-learning agent is too specific to the grid world. Make sure <code>get_action</code>, <code>update</code>, etc. don't assume anything about the state format — it's <code>(arm_index, hand_index)</code> for the crawler, not <code>(x, y)</code>.</p>
+
+<h4>No graphics / Pygame errors</h4>
+<pre><code>python mars_rover.py -t              # Text-only mode
+python mars_rover.py -q              # Quiet mode (no display)</code></pre>
+<p>The autograder and <code>check.py</code> never require Pygame.</p>
+</section>
+
+<!-- ═══════════════ POINTS BREAKDOWN ═══════════════ -->
+<section>
+<h2>Points Breakdown</h2>
+<table>
+<thead><tr><th>Question</th><th>Topic</th><th>Points</th></tr></thead>
+<tbody>
+<tr><td>Q1</td><td>Value Iteration</td><td>18</td></tr>
+<tr><td>Q2</td><td>Policy Analysis (Canyon Grid parameters)</td><td>18</td></tr>
+<tr><td>Q3</td><td>Q-Learning</td><td>18</td></tr>
+<tr><td>Q4</td><td>Epsilon-Greedy Exploration</td><td>7</td></tr>
+<tr><td>Q5</td><td>Q-Learning Deployment + Crawler</td><td>4</td></tr>
+<tr><td>Q6</td><td>Approximate Q-Learning</td><td>10</td></tr>
+<tr style="font-weight:700;border-top:2px solid var(--border)"><td><strong>Total</strong></td><td></td><td><strong>75</strong></td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ═══════════════ ACADEMIC INTEGRITY ═══════════════ -->
+<section>
+<h2>Academic Integrity</h2>
+<ul>
+  <li>Do <strong>not</strong> distribute or publish solutions.</li>
+  <li>Do <strong>not</strong> copy solutions from the internet.</li>
+  <li>You <strong>may</strong> discuss general approaches with classmates, but write your own code.</li>
+</ul>
+</section>
+
+</main>
+
+<div class="footer">
+  CS 451/551 — Introduction to Artificial Intelligence · Özyeğin University<br>
+  Mars Rover: Red Planet Rescue — Reinforcement Learning Project<br>
+  Created by Amin D. Alamdari, 2026<br>
+  © 2026 Mars Rover RL Homework Page
+</div>
+
+</body>
+</html>
