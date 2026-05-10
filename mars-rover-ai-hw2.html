@@ -162,15 +162,16 @@ details[open] summary { margin-bottom: 10px; }
     <p>
       In this project your Mars Rover agent will navigate treacherous Martian terrain &mdash;
       avoiding craters and collecting geological samples. You will implement
-      <strong>Value Iteration</strong>, <strong>Q-Learning</strong>, and
-      <strong>Approximate Q-Learning</strong> to teach Rover-7 to act optimally
+      <strong>Value Iteration</strong> and <strong>tabular Q-Learning</strong>
+      (with epsilon-greedy exploration) to teach Rover-7 to act optimally
       under stochastic solar interference.
     </p>
-    <div class="hero-meta">75 Points · 6 Questions · Python 3.10+</div>
+    <div class="hero-meta">75 Points · 5 Questions · Python 3.10+</div>
     <div class="hero-links">
       <a href="#">CS 451/551 Course Link (TBA)</a>
-      <a href="https://github.com/A-D-Alamdari/" target="_blank">Homework's Github Repository</a>
-      <a href="#">Repository README</a>
+      <a href="https://github.com/A-D-Alamdari/CS451-551-Homework2" target="_blank">Homework's GitHub Repository</a>
+      <a href="https://github.com/A-D-Alamdari/CS451-551-Homework2/blob/master/README.md" target="_blank">Repository README</a>
+      <a href="https://www.youtube.com/watch?v=OdFavcX32mc" target="_blank">Video Walkthrough</a>
     </div>
   </div>
 </div>
@@ -200,10 +201,10 @@ details[open] summary { margin-bottom: 10px; }
 <ul>
   <li>Implement <strong>Value Iteration</strong> for offline MDP planning with batch Bellman updates.</li>
   <li>Understand how discount factor, noise, and living reward shape optimal policies.</li>
-  <li>Implement <strong>Q-Learning</strong> for model-free reinforcement learning from experience.</li>
+  <li>Implement <strong>tabular Q-Learning</strong> for model-free reinforcement learning from experience.</li>
   <li>Balance <strong>exploration vs. exploitation</strong> using epsilon-greedy action selection.</li>
-  <li>Implement <strong>Approximate Q-Learning</strong> with feature-based generalization.</li>
-  <li>See why tabular methods fail on large state spaces and why feature weights generalize.</li>
+  <li>Verify that the same Q-Learner generalizes from grid worlds to a continuing-task domain (the Crawler robot).</li>
+  <li>See firsthand why tabular methods struggle to scale, motivating function approximation as a future topic.</li>
 </ul>
 </section>
 
@@ -216,7 +217,6 @@ details[open] summary { margin-bottom: 10px; }
 ├── mars_rover.py                  # Entry point — run this to start
 ├── autograder.py                   # Official autograder (75 pts)
 ├── check.py                       # Self-check (3 maps, no grade)
-├── generate_solutions.py           # Instructor only
 ├── project_params.py               # Project metadata
 ├── util.py                         # Data structures: Counter, sampling
 │
@@ -224,15 +224,14 @@ details[open] summary { margin-bottom: 10px; }
 │   ├── mdp.py                     # Abstract MDP interface
 │   ├── environment.py             # Abstract Environment interface
 │   ├── mars_grid.py               # MarsGrid MDP, layout loader
-│   ├── crawler.py                 # Crawler robot domain
-│   └── feature_extractors.py      # Feature functions for Approx Q
+│   └── crawler.py                 # Crawler robot domain
 │
 ├── agents/                         # Agent base classes
 │   └── learning_agents.py         # ValueEstimationAgent, ReinforcementAgent
 │
 ├── students/                       # ✏ YOUR CODE — only edit these
 │   ├── value_iteration_agents.py  # ✏ Q1: Value Iteration
-│   ├── qlearning_agents.py        # ✏ Q3, Q4, Q6: Q-Learning
+│   ├── qlearning_agents.py        # ✏ Q3, Q4, Q5: Q-Learning
 │   └── analysis.py                # ✏ Q2: Policy parameters
 │
 ├── display/                        # Visualization (optional)
@@ -246,13 +245,10 @@ details[open] summary { margin-bottom: 10px; }
 │   ├── test_classes.py            # Question/TestCase base classes
 │   └── mars_test_classes.py       # Project-specific test logic
 │
-├── layouts/                        # 12 grid layout files (.lay)
+├── layouts/                        # 9 grid layout files (.lay)
 │
-├── test_cases/                     # 22 test cases (q1–q6)
-│   ├── q1/ ... q6/               # CONFIG + .test + .solution per question
-│
-└── solutions/                      # 🔒 Instructor only
-    └── solutions.py</code></pre>
+└── test_cases/                     # 19 test cases (q1–q5)
+    └── q1/ ... q5/                # CONFIG + .test + .solution per question</code></pre>
 </details>
 
 <h3>Files you will edit</h3>
@@ -264,7 +260,7 @@ All places are marked with <code># *** YOUR CODE HERE ***</code> comments.
 <thead><tr><th>File</th><th>What you implement</th></tr></thead>
 <tbody>
 <tr><td><code>students/value_iteration_agents.py</code> <span class="badge badge-edit">EDIT</span></td><td>Value Iteration agent (Q1)</td></tr>
-<tr><td><code>students/qlearning_agents.py</code> <span class="badge badge-edit">EDIT</span></td><td>Q-Learning, ε-greedy, Approximate Q-Learning (Q3, Q4, Q6)</td></tr>
+<tr><td><code>students/qlearning_agents.py</code> <span class="badge badge-edit">EDIT</span></td><td>Q-Learning agent + ε-greedy exploration (Q3, Q4, Q5)</td></tr>
 <tr><td><code>students/analysis.py</code> <span class="badge badge-edit">EDIT</span></td><td>Policy parameter choices for Canyon Grid (Q2)</td></tr>
 </tbody>
 </table>
@@ -281,7 +277,7 @@ All places are marked with <code># *** YOUR CODE HERE ***</code> comments.
 </tbody>
 </table>
 
-<h4><code>students/qlearning_agents.py</code> — 7 methods</h4>
+<h4><code>students/qlearning_agents.py</code> — 5 methods</h4>
 <table>
 <thead><tr><th>Class / Method</th><th>Q</th><th>Description</th></tr></thead>
 <tbody>
@@ -290,8 +286,6 @@ All places are marked with <code># *** YOUR CODE HERE ***</code> comments.
 <tr><td><code>QLearningAgent.compute_action_from_q_values(state)</code></td><td>Q3</td><td>Best action — <strong>break ties randomly</strong></td></tr>
 <tr><td><code>QLearningAgent.get_action(state)</code></td><td>Q4</td><td>ε-greedy: random with prob ε, else best</td></tr>
 <tr><td><code>QLearningAgent.update(state, action, next_state, reward)</code></td><td>Q3</td><td>Q-learning update rule</td></tr>
-<tr><td><code>ApproximateQAgent.get_q_value(state, action)</code></td><td>Q6</td><td>Dot product: w · f(s,a)</td></tr>
-<tr><td><code>ApproximateQAgent.update(state, action, next_state, reward)</code></td><td>Q6</td><td>Weight update: w_i += α · δ · f_i(s,a)</td></tr>
 </tbody>
 </table>
 
@@ -320,7 +314,7 @@ All places are marked with <code># *** YOUR CODE HERE ***</code> comments.
 <pre><code>python mars_rover.py -m -g base_camp_grid
 python mars_rover.py -m -g canyon_grid
 python mars_rover.py -m -g maze_grid
-python mars_rover.py --list-layouts        # See all 12 available grids</code></pre>
+python mars_rover.py --list-layouts        # See all 9 available grids</code></pre>
 
 <h3>Step 3 — Understand the Mars Grid MDP</h3>
 <p>Every grid cell is one of:</p>
@@ -354,12 +348,12 @@ python mars_rover.py --list-layouts        # See all 12 available grids</code></
 
 <!-- ═══════════════ QUESTIONS ═══════════════ -->
 <section>
-<h2>Homework Tasks (Q1–Q6)</h2>
+<h2>Homework Tasks (Q1–Q5)</h2>
 
 <!-- Q1 -->
 <div class="question-block">
 <div class="question-header">
-  <span class="question-pts">18 pts</span>
+  <span class="question-pts">20 pts</span>
   <span class="question-title">Q1 — Value Iteration</span>
 </div>
 <div class="question-body">
@@ -385,7 +379,7 @@ python autograder.py -q q1                              # Grade Q1</code></pre>
 <!-- Q2 -->
 <div class="question-block">
 <div class="question-header">
-  <span class="question-pts">18 pts</span>
+  <span class="question-pts">20 pts</span>
   <span class="question-title">Q2 — Mission Profiles (Policies)</span>
   <span class="question-dep">Depends on Q1</span>
 </div>
@@ -418,7 +412,7 @@ python autograder.py -q q2</code></pre>
 <!-- Q3 -->
 <div class="question-block">
 <div class="question-header">
-  <span class="question-pts">18 pts</span>
+  <span class="question-pts">20 pts</span>
   <span class="question-title">Q3 — Q-Learning</span>
 </div>
 <div class="question-body">
@@ -446,7 +440,7 @@ python autograder.py -q q3</code></pre>
 <!-- Q4 -->
 <div class="question-block">
 <div class="question-header">
-  <span class="question-pts">7 pts</span>
+  <span class="question-pts">8 pts</span>
   <span class="question-title">Q4 — Epsilon-Greedy Exploration</span>
   <span class="question-dep">Depends on Q3</span>
 </div>
@@ -462,7 +456,7 @@ python autograder.py -q q3</code></pre>
   <p>A random action <em>may</em> happen to be the best action — that's fine.
   Don't filter out the optimal action during exploration.</p>
 </div>
-<p>After implementing Q4, the <strong>Mars Crawler</strong> robot should also work:</p>
+<p>After implementing Q4, the <strong>Mars Crawler</strong> robot should also work without further code changes:</p>
 <pre><code>python -m env.crawler              # Run the crawler — should learn to crawl forward
 python autograder.py -q q4</code></pre>
 </div>
@@ -471,52 +465,24 @@ python autograder.py -q q4</code></pre>
 <!-- Q5 -->
 <div class="question-block">
 <div class="question-header">
-  <span class="question-pts">4 pts</span>
-  <span class="question-title">Q5 — Q-Learning on Mars</span>
+  <span class="question-pts">7 pts</span>
+  <span class="question-title">Q5 — Q-Learning Deployment on Mars</span>
   <span class="question-dep">Depends on Q3 + Q4</span>
 </div>
 <div class="question-body">
-<p>Deploy your Q-learner on the <code>small_grid</code>. Train for 2000 episodes, then test for 100. Must win ≥ 80%.</p>
+<p>No new code — this question stress-tests your Q3 + Q4 implementation. Deploy your Q-learner on the
+<code>small_grid</code>. Train for 2000 episodes, then test for 100. The autograder requires a
+win rate of <strong>≥ 80%</strong>, and also verifies that the same Q-Learner trains the
+<strong>Crawler</strong> robot to move forward.</p>
 <pre><code>python mars_rover.py -a q -k 2010 -g small_grid -e 0.05 --alpha 0.2 --discount 0.8 -q
 python autograder.py -q q5</code></pre>
-<div class="card warning">
-  <div class="card-label red">Why larger grids fail</div>
-  <p>On <code>medium_grid</code> or larger, tabular Q-learning cannot converge — every cell is a separate
-  state with separate Q-values. The rover has no way to generalize that "craters are bad everywhere."
-  This motivates Q6.</p>
+<div class="card info">
+  <div class="card-label blue">Why larger grids strain tabular Q-Learning</div>
+  <p>On <code>medium_grid</code> or larger, tabular Q-learning struggles to converge — every cell is
+  a separate state with separate Q-values, so the rover has no way to generalize that
+  "craters are bad everywhere." This motivates <em>function approximation</em>, an
+  out-of-scope follow-up topic.</p>
 </div>
-</div>
-</div>
-
-<!-- Q6 -->
-<div class="question-block">
-<div class="question-header">
-  <span class="question-pts">10 pts</span>
-  <span class="question-title">Q6 — Approximate Q-Learning</span>
-  <span class="question-dep">Depends on Q3 + Q4</span>
-</div>
-<div class="question-body">
-<p>Instead of storing Q-values per state, learn <strong>feature weights</strong> that generalize:</p>
-<pre><code>Q(s,a) = Σ_i  w_i · f_i(s,a)
-
-difference = [r + γ · max_{a'} Q(s',a')] − Q(s,a)
-w_i ← w_i + α · difference · f_i(s,a)</code></pre>
-<p>Implement <code>get_q_value</code> (dot product) and <code>update</code> (weight update) in <code>ApproximateQAgent</code>.</p>
-<p>Features from <code>TerrainExtractor</code> include:</p>
-<ul>
-  <li><code>closest-sample-distance</code> — normalized Manhattan distance to nearest sample</li>
-  <li><code>#-of-craters-1-step-away</code> — count of adjacent crater cells</li>
-  <li><code>moves-toward-sample</code> — 1.0 if action reduces distance to goal</li>
-  <li><code>bias</code> — constant 1.0</li>
-</ul>
-<pre><code># Identity features (should match tabular Q-learning):
-python mars_rover.py -a q -g small_grid -k 100
-
-# Terrain features — generalizes to large grids:
-python mars_rover.py -a q -g large_grid -k 60
-python mars_rover.py -a q -g huge_grid -k 100
-
-python autograder.py -q q6</code></pre>
 </div>
 </div>
 </section>
@@ -539,8 +505,8 @@ python autograder.py -q q6</code></pre>
 <ul>
   <li><strong>In-place VI updates</strong> — create a new Counter per iteration. Reading and writing <code>self.values</code> in the same sweep gives wrong results.</li>
   <li><strong>Not breaking ties randomly (Q3)</strong> — if two actions have the same Q, use <code>random.choice()</code>. Without this, the rover gets stuck.</li>
-  <li><strong>Accessing Q-values directly (Q6)</strong> — always call <code>self.get_q_value()</code>, never <code>self.q_values[...]</code>. ApproximateQAgent overrides <code>get_q_value</code>.</li>
-  <li><strong>Forgetting unseen actions have Q=0</strong> — the Counter returns 0 for missing keys. If all tried actions have Q < 0, an untried action is optimal.</li>
+  <li><strong>Forgetting unseen actions have Q=0</strong> — the Counter returns 0 for missing keys. If all tried actions have Q &lt; 0, an untried action is optimal.</li>
+  <li><strong>Accessing Q-values directly</strong> — always read through <code>self.get_q_value()</code>, never <code>self.q_values[...]</code>. The accessor is the single public read path.</li>
 </ul>
 </section>
 
@@ -548,17 +514,19 @@ python autograder.py -q q6</code></pre>
 <section>
 <h2>Testing Your Implementation</h2>
 
-<h3>Self-Check (no grade) - For Students</h3>
+<h3>Self-Check (no grade)</h3>
 <pre><code>python check.py              # Run all checks on 3 maps
 python check.py -q q1        # Check only Q1</code></pre>
 <p>The self-check tests your code on <code>small_grid</code>, <code>base_camp_grid</code>, and <code>canyon_grid</code>.
 It shows ✅/❌ per check with diagnostic messages. <strong>No points or grades</strong> — purely for debugging.</p>
 
-<h3>Official Autograder (75 points) - For Instructors (Not Available for Students)</h3>
+<h3>Official Autograder (75 points)</h3>
 <pre><code>python autograder.py                 # Grade all questions
 python autograder.py -q q1           # Grade one question
 python autograder.py --no-graphics   # Skip any display</code></pre>
-<p>The autograder tests across <strong>all 12 grid layouts</strong> with pre-computed reference solutions. Values must match within 0.01 tolerance.</p>
+<p>The autograder tests across the <strong>9 grid layouts</strong> with pre-computed reference
+solutions. Values must match within 0.01 tolerance. You can run it as often as you like to
+track your progress — running it does not submit anything.</p>
 
 <h3>What the autograder checks</h3>
 <table>
@@ -568,8 +536,7 @@ python autograder.py --no-graphics   # Skip any display</code></pre>
 <tr><td>Q2</td><td>Policy at key cells matches expected direction for each parameter tuple</td></tr>
 <tr><td>Q3</td><td>Q-values after fixed training episodes match reference (with seeded randomness)</td></tr>
 <tr><td>Q4</td><td>Best-action frequency falls in expected range for given ε; pure exploit at ε=0</td></tr>
-<tr><td>Q5</td><td>Win rate ≥ 80% on small_grid; crawler moves forward</td></tr>
-<tr><td>Q6</td><td>Learned weights match reference; Q(s,a) = w·f verified; works on large grids</td></tr>
+<tr><td>Q5</td><td>Win rate ≥ 80% on small_grid; crawler robot moves forward</td></tr>
 </tbody>
 </table>
 </section>
@@ -579,7 +546,7 @@ python autograder.py --no-graphics   # Skip any display</code></pre>
 <h2>Useful Command-Line Options</h2>
 <pre><code># Layout selection
 python mars_rover.py -g canyon_grid
-python mars_rover.py -g huge_grid
+python mars_rover.py -g expedition_grid
 python mars_rover.py --list-layouts
 
 # Agent selection
@@ -614,10 +581,6 @@ python mars_rover.py -q                  # Quiet (no transition output)
 <p>Check two things: (1) Are you breaking ties randomly in <code>compute_action_from_q_values</code>?
 (2) Are untried actions (Q=0) being considered? If all tried actions have negative Q, an untried action is best.</p>
 
-<h4>Approximate Q-Learning doesn't learn</h4>
-<p>Make sure you call <code>self.get_q_value()</code> in the <code>update</code> method, not <code>self.q_values[...]</code>.
-<code>ApproximateQAgent</code> overrides <code>get_q_value</code> — calling the parent's tabular version gives wrong gradients.</p>
-
 <h4>Q5 fails but Q3/Q4 pass</h4>
 <p>Q5 uses different learning parameters (ε=0.05, α=0.2, γ=0.8). Your Q-learning should work with any parameter values, not just the defaults.</p>
 
@@ -636,12 +599,11 @@ python mars_rover.py -q              # Quiet mode (no display)</code></pre>
 <table>
 <thead><tr><th>Question</th><th>Topic</th><th>Points</th></tr></thead>
 <tbody>
-<tr><td>Q1</td><td>Value Iteration</td><td>18</td></tr>
-<tr><td>Q2</td><td>Policy Analysis (Canyon Grid parameters)</td><td>18</td></tr>
-<tr><td>Q3</td><td>Q-Learning</td><td>18</td></tr>
-<tr><td>Q4</td><td>Epsilon-Greedy Exploration</td><td>7</td></tr>
-<tr><td>Q5</td><td>Q-Learning Deployment + Crawler</td><td>4</td></tr>
-<tr><td>Q6</td><td>Approximate Q-Learning</td><td>10</td></tr>
+<tr><td>Q1</td><td>Value Iteration</td><td>20</td></tr>
+<tr><td>Q2</td><td>Policy Analysis (Canyon Grid parameters)</td><td>20</td></tr>
+<tr><td>Q3</td><td>Q-Learning</td><td>20</td></tr>
+<tr><td>Q4</td><td>Epsilon-Greedy Exploration</td><td>8</td></tr>
+<tr><td>Q5</td><td>Q-Learning Deployment + Crawler</td><td>7</td></tr>
 <tr style="font-weight:700;border-top:2px solid var(--border)"><td><strong>Total</strong></td><td></td><td><strong>75</strong></td></tr>
 </tbody>
 </table>
